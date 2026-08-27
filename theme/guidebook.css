@@ -247,6 +247,77 @@
   white-space: pre-wrap;
 }
 
+.ms-policy {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-inline-start: auto;
+  color: var(--icons);
+  font: 0.72em var(--mono-font);
+}
+
+.ms-policy select {
+  padding: 0.42rem 0.55rem;
+  border: 1px solid var(--table-border-color);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+
+.ms-ring {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(3.25rem, 1fr));
+  gap: 0.4rem;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-ring-slot {
+  display: grid;
+  min-width: 3.25rem;
+  min-height: 5.25rem;
+  grid-template-rows: auto 1fr auto;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+}
+
+.ms-ring-slot > small {
+  padding: 0.25rem;
+  color: var(--icons);
+  font: 0.62em var(--mono-font);
+  text-align: center;
+}
+
+.ms-ring-slot > strong {
+  display: grid;
+  place-items: center;
+  border-block: 1px solid var(--table-border-color);
+  color: var(--icons);
+  font: 0.82em var(--mono-font);
+}
+
+.ms-ring-slot.live > strong {
+  background: color-mix(in srgb, #7ac7e3 16%, var(--bg));
+  color: var(--fg);
+}
+
+.ms-ring-pointers {
+  min-height: 1.55rem;
+  padding: 0.2rem;
+  color: #d49b32;
+  font: 600 0.55em/1.2 var(--mono-font);
+  text-align: center;
+}
+
+.ms-ring-slot.head {
+  border-color: #d49b32;
+}
+
+.ms-ring-slot.tail {
+  box-shadow: inset 0 -3px #7ac7e3;
+}
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }
@@ -308,6 +379,7 @@
   .ms-layout,
   .ms-lab-head { grid-template-columns: 1fr; }
   .ms-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ms-policy { width: 100%; margin-inline-start: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

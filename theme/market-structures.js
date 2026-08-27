@@ -211,9 +211,163 @@
     render('Selected order A. Select an operation to see the pointer writes.');
   }
 
+  function initRingLab(root) {
+    const capacity = 8;
+    let slots = Array(capacity).fill(null);
+    let head = 0;
+    let size = 0;
+    let rejected = 0;
+    let nextValue = 1;
+    const container = root.querySelector('[data-ring-slots]');
+    const log = root.querySelector('[data-ring-log]');
+    const policy = root.querySelector('[data-ring-policy]');
+
+    function tail() {
+      return (head + size) % capacity;
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      setStat('head', head);
+      setStat('tail', tail());
+      setStat('size', `${size} / ${capacity}`);
+      setStat('rejected', rejected);
+      container.replaceChildren();
+
+      slots.forEach((value, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'ms-ring-slot';
+        slot.classList.toggle('live', value !== null);
+        slot.classList.toggle('head', index === head);
+        slot.classList.toggle('tail', index === tail());
+
+        const physical = document.createElement('small');
+        physical.textContent = `slot ${index}`;
+        const payload = document.createElement('strong');
+        payload.textContent = value === null ? '·' : value;
+        const pointers = document.createElement('span');
+        pointers.className = 'ms-ring-pointers';
+        const labels = [];
+        if (index === head) labels.push(size === 0 ? 'head (empty)' : 'head');
+        if (index === tail()) labels.push(size === capacity ? 'next write if overwrite' : 'next write');
+        pointers.textContent = labels.join(' + ');
+
+        slot.append(physical, payload, pointers);
+        container.append(slot);
+      });
+
+      log.textContent = message;
+    }
+
+    function enqueueOne() {
+      const value = `m${nextValue}`;
+      nextValue += 1;
+
+      if (size === capacity) {
+        if (policy.value === 'reject') {
+          rejected += 1;
+          return { outcome: 'rejected', value };
+        }
+
+        const overwritten = slots[head];
+        slots[head] = value;
+        head = (head + 1) % capacity;
+        return { outcome: 'overwritten', value, overwritten };
+      }
+
+      const writeIndex = tail();
+      slots[writeIndex] = value;
+      size += 1;
+      return { outcome: 'accepted', value, index: writeIndex };
+    }
+
+    function describe(result) {
+      if (result.outcome === 'rejected') {
+        return `${result.value} was rejected because the ring is full. Existing FIFO order is unchanged.`;
+      }
+      if (result.outcome === 'overwritten') {
+        return `${result.value} overwrote oldest item ${result.overwritten}; head advanced to preserve the order of surviving items.`;
+      }
+      return `${result.value} was constructed in slot ${result.index}. No existing item moved.`;
+    }
+
+    function dequeueOne() {
+      if (size === 0) return null;
+      const readIndex = head;
+      const value = slots[readIndex];
+      slots[readIndex] = null;
+      head = (head + 1) % capacity;
+      size -= 1;
+      return { value, index: readIndex };
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === 'enqueue') {
+        render(describe(enqueueOne()));
+      }
+
+      if (action === 'dequeue') {
+        const result = dequeueOne();
+        render(
+          result
+            ? `${result.value} was destroyed and returned from slot ${result.index}; head advanced modulo ${capacity}.`
+            : 'The ring is empty, so dequeue has no value to return.',
+        );
+      }
+
+      if (action === 'burst') {
+        const results = Array.from({ length: 5 }, enqueueOne);
+        const counts = results.reduce(
+          (total, result) => {
+            total[result.outcome] += 1;
+            return total;
+          },
+          { accepted: 0, rejected: 0, overwritten: 0 },
+        );
+        render(
+          `Burst result: ${counts.accepted} accepted, ${counts.rejected} rejected, ${counts.overwritten} overwrote the oldest item.`,
+        );
+      }
+
+      if (action === 'drain') {
+        const count = size;
+        while (size > 0) dequeueOne();
+        render(`Drained ${count} item${count === 1 ? '' : 's'} in FIFO order. Capacity and storage did not change.`);
+      }
+
+      if (action === 'reset') {
+        slots = Array(capacity).fill(null);
+        head = 0;
+        size = 0;
+        rejected = 0;
+        nextValue = 1;
+        render('The ring is empty. Head and next-write both name slot 0.');
+      }
+    });
+
+    policy.addEventListener('change', () => {
+      render(
+        policy.value === 'reject'
+          ? 'Full policy changed to reject. Existing items will never be displaced by a new enqueue.'
+          : 'Full policy changed to overwrite. A full enqueue will replace the oldest item and advance head.',
+      );
+    });
+
+    render('The ring is empty. Head and next-write both name slot 0.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
+    document.querySelectorAll('[data-ms-ring]').forEach(initRingLab);
   }
 
   if (document.readyState === 'loading') {

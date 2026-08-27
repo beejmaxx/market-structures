@@ -9,7 +9,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 |---:|---|---|---|
 | 01 | Vectors | When does contiguous movement beat pointer stability? | **Chapter available** |
 | 02 | Intrusive lists and free lists | What do stable nodes buy, and what does pointer chasing cost? | **Chapter available** |
-| 03 | Queues, deques, and rings | How should full, empty, wraparound, and backpressure be represented? | Planned |
+| 03 | Queues, deques, and rings | How should full, empty, wraparound, and backpressure be represented? | **Chapter available** |
 | 04 | Heaps, priority, and sorting | Which minimum ordering is sufficient for the workload? | Planned |
 | 05 | Hashing under pressure | What happens to lookup tails as clusters form? | Planned |
 | 06 | Balanced search trees | Which invariants keep ordered mutation logarithmic? | Planned |
@@ -53,12 +53,12 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Queues, deques, and rings**. It will not be linked
+The next chapter should be **Heaps, priority, and sorting**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive wraparound/backpressure diagram;
+- an interactive heap-repair diagram;
 - a blank-file build; and
 - a measurement plan.

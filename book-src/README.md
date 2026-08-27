@@ -14,12 +14,14 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first two chapters are complete learning chapters:
+The first three chapters are complete learning chapters:
 
 - **Vectors** develops the contiguous-storage model, growth, invalidation,
   movement, and cache behavior.
 - **Linked lists** develops pointer rewiring, sentinels, intrusive ownership,
   free-list reuse, and the cost of scattered traversal.
+- **Queues, deques, and ring buffers** develops wraparound state, bounded
+  capacity, backpressure semantics, and object lifetime inside fixed storage.
 
 The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
 listed as a chapter only after it contains enough material to learn from; the
