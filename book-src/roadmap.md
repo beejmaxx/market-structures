@@ -7,9 +7,9 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 
 | Module | Topic | Core question | Status |
 |---:|---|---|---|
-| 01 | Vectors | When does contiguous movement beat pointer stability? | **Chapter available** |
+| 01 | Arrays and vectors | When does fixed contiguous storage become growable, and what does growth invalidate? | **Two chapters available** |
 | 02 | Intrusive lists and free lists | What do stable nodes buy, and what does pointer chasing cost? | **Chapter available** |
-| 03 | Queues, deques, and rings | How should full, empty, wraparound, and backpressure be represented? | **Chapter available** |
+| 03 | Stacks, queues, deques, and rings | How should LIFO/FIFO order, full, empty, wraparound, and backpressure be represented? | Ring/deque chapter available; stack chapter planned |
 | 04 | Heaps, priority, and sorting | Which minimum ordering is sufficient for the workload? | Planned |
 | 05 | Hashing under pressure | What happens to lookup tails as clusters form? | Planned |
 | 06 | Balanced search trees | Which invariants keep ordered mutation logarithmic? | Planned |
@@ -53,12 +53,35 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Heaps, priority, and sorting**. It will not be linked
+The next chapter should be **Stacks**. It will complete the missing LIFO
+foundation before heaps. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive heap-repair diagram;
+- an interactive call-stack versus container-stack diagram;
 - a blank-file build; and
 - a measurement plan.
+
+After stacks, the sequence resumes with **Heaps, priority, and sorting**.
+
+## Coverage audit
+
+Each relevant chapter must name and distinguish the standard-library baseline,
+the custom learning implementation, and the low-latency specialization.
+
+| Concept | C++ baseline | Rust baseline | Planned specialization |
+|---|---|---|---|
+| fixed array/view | built-in array, `std::array`, `std::span` | `[T; N]`, slices | dense grids, AoS/SoA |
+| growable array | `std::vector` | `Vec` | static/small vector |
+| stack | `std::stack`, vector-backed stack | `Vec` as stack | fixed-capacity stack |
+| deque/ring | `std::deque` | `VecDeque` | bounded ring |
+| priority queue | `std::priority_queue` | `BinaryHeap` | indexed heap |
+| hash map/set | `std::unordered_map/set` | `HashMap/HashSet` | fixed open addressing |
+| ordered map/set | `std::map/set` | `BTreeMap/BTreeSet` | flat map, radix, skip list |
+
+Additional structures will appear where their workloads justify them: Bloom
+filters under hashing; Fenwick and segment trees under range aggregation;
+disjoint sets under graph algorithms; and arenas, slabs, and generational pools
+under allocation.

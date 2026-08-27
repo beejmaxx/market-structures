@@ -364,10 +364,112 @@
     render('The ring is empty. Head and next-write both name slot 0.');
   }
 
+  function initArrayLab(root) {
+    const length = 16;
+    const cacheLineBytes = 64;
+    const elementSizeControl = root.querySelector('[data-array-element-size]');
+    const strideControl = root.querySelector('[data-array-stride]');
+    const container = root.querySelector('[data-array-slots]');
+    const log = root.querySelector('[data-array-log]');
+    let touched = new Set();
+    let nextIndex = 0;
+    let current = -1;
+
+    function elementSize() {
+      return Number(elementSizeControl.value);
+    }
+
+    function stride() {
+      return Number(strideControl.value);
+    }
+
+    function cacheLine(index) {
+      return Math.floor((index * elementSize()) / cacheLineBytes);
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      const lines = new Set(Array.from(touched, cacheLine));
+      setStat('reads', touched.size);
+      setStat('lines', lines.size);
+      setStat('useful', touched.size * elementSize());
+      setStat('fetched', lines.size * cacheLineBytes);
+      container.replaceChildren();
+
+      for (let index = 0; index < length; index += 1) {
+        const slot = document.createElement('div');
+        slot.className = 'ms-array-slot';
+        slot.classList.toggle('touched', touched.has(index));
+        slot.classList.toggle('current', index === current);
+
+        const label = document.createElement('span');
+        label.textContent = `[${index}]`;
+        const value = document.createElement('strong');
+        value.textContent = touched.has(index) ? `v${index}` : '·';
+        const line = document.createElement('small');
+        line.textContent = `line ${cacheLine(index)}`;
+
+        slot.append(label, value, line);
+        container.append(slot);
+      }
+
+      log.textContent = message;
+    }
+
+    function reset(message = 'No elements have been read.') {
+      touched = new Set();
+      nextIndex = 0;
+      current = -1;
+      render(message);
+    }
+
+    function step() {
+      if (nextIndex >= length) {
+        render('The strided scan is complete. Reset or change a parameter to run again.');
+        return false;
+      }
+      current = nextIndex;
+      touched.add(current);
+      nextIndex += stride();
+      render(
+        `Read element ${current} at byte offset ${current * elementSize()}, requiring cache line ${cacheLine(current)} in this model.`,
+      );
+      return true;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      if (button.dataset.action === 'step') step();
+      if (button.dataset.action === 'run') {
+        while (step()) {
+          // Run the same state transition until the stride exits the array.
+        }
+        render(
+          `Scan complete: ${touched.size} elements used ${touched.size * elementSize()} bytes from ${new Set(Array.from(touched, cacheLine)).size * cacheLineBytes} modeled bytes fetched.`,
+        );
+      }
+      if (button.dataset.action === 'reset') reset();
+    });
+
+    function resetForConfiguration() {
+      reset(`Model reset for ${elementSize()}-byte elements with stride ${stride()}.`);
+    }
+
+    elementSizeControl.addEventListener('change', resetForConfiguration);
+    strideControl.addEventListener('change', resetForConfiguration);
+    reset();
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
     document.querySelectorAll('[data-ms-ring]').forEach(initRingLab);
+    document.querySelectorAll('[data-ms-array]').forEach(initArrayLab);
   }
 
   if (document.readyState === 'loading') {

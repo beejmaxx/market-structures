@@ -16,5 +16,6 @@ your reasoning stops.
 Keep the mistakes. They are more useful than a polished second attempt because
 they identify which gaps are conceptual, representational, or mechanical.
 
-Afterward, begin with [Vectors](01-vectors.md). Even if arrays feel elementary,
-the chapter establishes the cost model used by the rest of the book.
+Afterward, begin with [Arrays and memory layout](01-arrays.md). Even if arrays
+feel elementary, the chapter establishes the cost model used by the rest of
+the book.

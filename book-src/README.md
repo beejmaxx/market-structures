@@ -14,8 +14,10 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first three chapters are complete learning chapters:
+The first four chapters are complete learning chapters:
 
+- **Arrays and memory layout** develops fixed extent, slices and spans, stride,
+  multidimensional layout, and AoS versus SoA.
 - **Vectors** develops the contiguous-storage model, growth, invalidation,
   movement, and cache behavior.
 - **Linked lists** develops pointer rewiring, sentinels, intrusive ownership,

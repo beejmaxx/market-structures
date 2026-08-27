@@ -39,6 +39,62 @@ The list does not allocate a wrapper around `Order`. The order itself contains
 the linkage. This is useful in a preallocated order pool, but it couples the
 object to a membership protocol that you must enforce.
 
+## Standard owned linked lists
+
+Before building an intrusive list, know what the standard containers provide.
+They own their nodes; the payload does not contain your custom links.
+
+### C++ `std::list<T>`
+
+[`std::list`](https://eel.is/c++draft/list) is a doubly linked sequence with
+bidirectional iteration. Inserting or erasing at a known iterator is constant
+time, and insertion does not invalidate iterators or references to other
+elements.
+
+```cpp
+std::list<Order> orders;
+orders.push_back(order_a);
+orders.push_back(order_b);
+
+auto position = orders.begin();
+++position;
+orders.insert(position, order_between);
+orders.erase(position);
+```
+
+It does not provide random access, it owns its node storage, and ordinary
+insertion can involve the allocator. That makes it a useful semantic reference
+for list operations, not an automatic choice for a preallocated hot path.
+
+### Rust `LinkedList<T>`
+
+Rust provides
+[`std::collections::LinkedList<T>`](https://doc.rust-lang.org/std/collections/struct.LinkedList.html),
+a doubly linked list with owned nodes:
+
+```rust
+use std::collections::LinkedList;
+
+let mut orders = LinkedList::new();
+orders.push_back(order_a);
+orders.push_front(order_b);
+
+let first = orders.pop_front();
+let last = orders.pop_back();
+```
+
+The Rust documentation explicitly points out that `Vec` or `VecDeque` is
+usually a better default because array-based containers are generally faster
+and more memory efficient. `LinkedList` remains relevant when its linked
+representation and end operations match the workload.
+
+Neither standard container is intrusive, and neither is the fixed order-pool
+design built later in this chapter. Keep these three questions separate:
+
+1. Is list ordering the correct abstract behavior?
+2. Should the container own dynamically allocated nodes?
+3. Should links live inside preallocated application objects?
+
 ## Write the invariants before the helpers
 
 For every live node `x` in a doubly linked list:

@@ -157,6 +157,37 @@ Unsigned subtraction needs deliberate wraparound. One safe expression for
 moving backward is `(index + N - 1) % N`; a power-of-two implementation can use
 wrapping arithmetic followed by a mask.
 
+## C++ `std::deque<T>` is not specified as a ring
+
+C++ provides [`std::deque<T>`](https://eel.is/c++draft/deque), a growable
+double-ended sequence:
+
+```cpp
+std::deque<Update> updates;
+updates.push_back(add);
+updates.push_front(snapshot_boundary);
+
+const Update& next = updates.front();
+updates.pop_front();
+```
+
+The standard guarantees random-access iteration, constant-time insertion and
+erasure at either end, and linear-time insertion or erasure in the middle. It
+does **not** require one contiguous allocation or a circular-array
+representation. Typical implementations use multiple fixed-size blocks plus
+an index structure.
+
+Consequences:
+
+- random access exists, but elements are not one `std::span`;
+- growth at an end can involve storage management;
+- there is no fixed full state or backpressure policy; and
+- implementation layout must not be assumed by portable code.
+
+Use `std::deque` as the C++ semantic oracle for a custom deque. Use the custom
+bounded ring when fixed capacity, no growth, and an explicit full policy are
+requirements rather than incidental optimizations.
+
 ## Rust's `VecDeque<T>` is the standard reference
 
 Rust already provides [`std::collections::VecDeque<T>`](https://doc.rust-lang.org/std/collections/struct.VecDeque.html),
