@@ -9,7 +9,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 |---:|---|---|---|
 | 01 | Arrays and vectors | When does fixed contiguous storage become growable, and what does growth invalidate? | **Two chapters available** |
 | 02 | Intrusive lists and free lists | What do stable nodes buy, and what does pointer chasing cost? | **Chapter available** |
-| 03 | Stacks, queues, deques, and rings | How should LIFO/FIFO order, full, empty, wraparound, and backpressure be represented? | Ring/deque chapter available; stack chapter planned |
+| 03 | Stacks, queues, deques, and rings | How should LIFO/FIFO order, full, empty, wraparound, and backpressure be represented? | **Two chapters available** |
 | 04 | Heaps, priority, and sorting | Which minimum ordering is sufficient for the workload? | Planned |
 | 05 | Hashing under pressure | What happens to lookup tails as clusters form? | Planned |
 | 06 | Balanced search trees | Which invariants keep ordered mutation logarithmic? | Planned |
@@ -53,18 +53,15 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Stacks**. It will complete the missing LIFO
-foundation before heaps. It will not be linked
+The next chapter should be **Heaps, priority, and sorting**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive call-stack versus container-stack diagram;
+- an interactive heap-repair diagram;
 - a blank-file build; and
 - a measurement plan.
-
-After stacks, the sequence resumes with **Heaps, priority, and sorting**.
 
 ## Coverage audit
 

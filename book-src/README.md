@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first four chapters are complete learning chapters:
+The first five chapters are complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -22,6 +22,8 @@ The first four chapters are complete learning chapters:
   movement, and cache behavior.
 - **Linked lists** develops pointer rewiring, sentinels, intrusive ownership,
   free-list reuse, and the cost of scattered traversal.
+- **Stacks** develops LIFO semantics, container adaptors, fixed capacity, and
+  free-slot reuse.
 - **Queues, deques, and ring buffers** develops wraparound state, bounded
   capacity, backpressure semantics, and object lifetime inside fixed storage.
 

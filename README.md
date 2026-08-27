@@ -6,8 +6,8 @@ under `~/code/books`.
 
 Public edition: https://beejmaxx.github.io/market-structures/
 
-The finished chapters teach arrays, vectors, linked lists, and bounded ring
-buffers with interactive diagrams, blank-file builds, invariants, and
+The finished chapters teach arrays, vectors, linked lists, stacks, and bounded
+ring buffers with interactive diagrams, blank-file builds, invariants, and
 measurement plans. The remaining 18-module program is tracked honestly in the
 learning roadmap.
 

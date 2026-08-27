@@ -361,6 +361,76 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 22%, transparent);
 }
 
+.ms-stack-meanings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-block: 1.4rem 2rem;
+}
+
+.ms-stack-meanings > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border: 1px solid var(--table-border-color);
+  background: var(--table-alternate-bg);
+}
+
+.ms-stack-meanings strong,
+.ms-stack-meanings span,
+.ms-stack-meanings small {
+  padding: 0.45rem 0.6rem;
+  border-block-end: 1px solid var(--table-border-color);
+  font-family: var(--mono-font);
+}
+
+.ms-stack-meanings strong { font-size: 0.78em; }
+.ms-stack-meanings span { background: var(--bg); font-size: 0.72em; }
+.ms-stack-meanings small { border-block-end: 0; color: var(--icons); font-size: 0.65em; }
+
+.ms-stack {
+  display: flex;
+  width: min(100%, 22rem);
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-block: 1rem;
+  padding: 0.5rem;
+  border-inline: 3px solid var(--table-border-color);
+  border-block-end: 3px solid var(--table-border-color);
+}
+
+.ms-stack-slot {
+  display: grid;
+  min-height: 2.2rem;
+  grid-template-columns: 4rem 1fr auto;
+  align-items: center;
+  border: 1px dashed var(--table-border-color);
+  color: var(--icons);
+}
+
+.ms-stack-slot span,
+.ms-stack-slot small {
+  padding: 0.35rem 0.5rem;
+  font: 0.66em var(--mono-font);
+}
+
+.ms-stack-slot strong {
+  padding: 0.35rem 0.5rem;
+  font: 0.8em var(--mono-font);
+}
+
+.ms-stack-slot.live {
+  border-style: solid;
+  border-color: #7ac7e3;
+  background: color-mix(in srgb, #7ac7e3 13%, var(--bg));
+  color: var(--fg);
+}
+
+.ms-stack-slot.top {
+  border-color: #d49b32;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 22%, transparent);
+}
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }
@@ -420,7 +490,8 @@
 @media (max-width: 700px) {
   .chapter-meta span { border-inline-end: 0 !important; }
   .ms-layout,
-  .ms-lab-head { grid-template-columns: 1fr; }
+  .ms-lab-head,
+  .ms-stack-meanings { grid-template-columns: 1fr; }
   .ms-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ms-policy { width: 100%; margin-inline-start: 0; }
 }

@@ -465,11 +465,100 @@
     reset();
   }
 
+  function initStackLab(root) {
+    const capacity = 8;
+    let values = [];
+    let nextValue = 1;
+    let rejected = 0;
+    const container = root.querySelector('[data-stack-slots]');
+    const log = root.querySelector('[data-stack-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      setStat('size', `${values.length} / ${capacity}`);
+      setStat('top', values.length === 0 ? 'none' : values.length - 1);
+      setStat('next', values.length === capacity ? 'full' : values.length);
+      setStat('rejected', rejected);
+      container.replaceChildren();
+
+      for (let index = capacity - 1; index >= 0; index -= 1) {
+        const slot = document.createElement('div');
+        slot.className = 'ms-stack-slot';
+        slot.classList.toggle('live', index < values.length);
+        slot.classList.toggle('top', index === values.length - 1);
+
+        const label = document.createElement('span');
+        label.textContent = `slot ${index}`;
+        const value = document.createElement('strong');
+        value.textContent = index < values.length ? values[index] : 'uninitialized';
+        const marker = document.createElement('small');
+        marker.textContent = index === values.length - 1 ? '← top' : '';
+        slot.append(label, value, marker);
+        container.append(slot);
+      }
+      log.textContent = message;
+    }
+
+    function push() {
+      const value = `v${nextValue}`;
+      nextValue += 1;
+      if (values.length === capacity) {
+        rejected += 1;
+        return `${value} was rejected. The stack is full and no live element changed.`;
+      }
+      values.push(value);
+      return `${value} was constructed in slot ${values.length - 1} and became the new top.`;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === 'push') render(push());
+      if (action === 'peek') {
+        render(
+          values.length === 0
+            ? 'Peek has no value because the stack is empty.'
+            : `${values[values.length - 1]} is the top. Peek did not mutate the stack.`,
+        );
+      }
+      if (action === 'pop') {
+        if (values.length === 0) {
+          render('Pop returned no value because the stack is empty.');
+        } else {
+          const index = values.length - 1;
+          const value = values.pop();
+          render(`${value} was moved out and destroyed from slot ${index}. Lower elements did not shift.`);
+        }
+      }
+      if (action === 'fill') {
+        const count = capacity - values.length;
+        let finalMessage = '';
+        while (values.length < capacity) finalMessage = push();
+        render(count === 0 ? 'The stack is already full.' : `Filled ${count} slot${count === 1 ? '' : 's'}. ${finalMessage}`);
+      }
+      if (action === 'reset') {
+        values = [];
+        nextValue = 1;
+        rejected = 0;
+        render('The stack is empty.');
+      }
+    });
+
+    render('The stack is empty.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
     document.querySelectorAll('[data-ms-ring]').forEach(initRingLab);
     document.querySelectorAll('[data-ms-array]').forEach(initArrayLab);
+    document.querySelectorAll('[data-ms-stack]').forEach(initStackLab);
   }
 
   if (document.readyState === 'loading') {
