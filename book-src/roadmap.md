@@ -20,7 +20,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 11 | Memory hierarchy | Which observed costs come from cache, TLB, branches, or dependencies? | **Chapter available** |
 | 12 | Allocation and object pools | How do lifetime and reuse policies affect latency distributions? | **Chapter available** |
 | 13 | Layout and indirection | When should data be AoS, SoA, packed, indexed, or pointer-linked? | **Chapter available** |
-| 14 | Concurrency primitives | What memory-order guarantees does the algorithm actually need? | Planned |
+| 14 | Concurrency primitives | What memory-order guarantees does the algorithm actually need? | **Chapter available** |
 | 15 | Benchmark design | Which experiment distinguishes the proposed mechanisms? | Planned |
 | 16 | Order-book representations | Which access paths deserve independent indexes? | Planned |
 | 17 | C++ and Rust implementations | How do language constraints change the best representation? | Planned |
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Concurrency and atomics**. It will not be linked
+The next chapter should be **Benchmark design**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive publication diagram;
+- an interactive benchmark-boundary diagram;
 - a blank-file build; and
 - a measurement plan.
 

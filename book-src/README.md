@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first fifteen chapters are complete learning chapters:
+The first sixteen chapters are complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -46,6 +46,8 @@ The first fifteen chapters are complete learning chapters:
   generations, bounded capacity, and failure policy explicit.
 - **Data layout and indirection** separates semantic parity from physical
   parity while comparing AoS, SoA, hot/cold, pointers, and handles.
+- **Concurrency and atomics** derives publication ordering from ownership and
+  builds toward a bounded SPSC queue without hand-waving the memory model.
 
 The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
 listed as a chapter only after it contains enough material to learn from; the

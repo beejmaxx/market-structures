@@ -28,6 +28,10 @@
 - [Allocation, arenas, slabs, and pools](12-allocation-pools.md)
 - [Data layout and indirection](13-layout-indirection.md)
 
+# Evidence and synthesis
+
+- [Concurrency and atomics](14-concurrency-atomics.md)
+
 # Program
 
 - [Learning roadmap](roadmap.md)

@@ -1400,6 +1400,62 @@
     render('Select an access pattern.');
   }
 
+  function initPublishLab(root) {
+    const labels = ['write payload', 'release sequence', 'acquire sequence', 'read payload'];
+    let stage = 0;
+    let blocked = null;
+    const container = root.querySelector('[data-publish-stages]');
+    const log = root.querySelector('[data-publish-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      setStat('written', stage >= 1 ? 'yes' : 'no');
+      setStat('released', stage >= 2 ? 1 : 0);
+      setStat('acquired', stage >= 3 ? 1 : 0);
+      setStat('safe', stage >= 3 ? 'yes' : 'no');
+      container.replaceChildren();
+      labels.forEach((label, index) => {
+        const item = document.createElement('span');
+        item.className = `ms-publish-stage${index < stage ? ' complete' : ''}${blocked === index ? ' blocked' : ''}`;
+        item.textContent = label;
+        container.append(item);
+      });
+      log.textContent = message;
+      blocked = null;
+    }
+
+    function attempt(requiredStage, nextStage, success, failure) {
+      if (stage === requiredStage) {
+        stage = nextStage;
+        render(success);
+      } else {
+        blocked = requiredStage;
+        render(failure);
+      }
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === 'write') attempt(0, 1, 'The producer initialized the payload, but has not published readiness.', 'This model already has a written payload; reset before producing another.');
+      if (action === 'publish') attempt(1, 2, 'The release store published sequence 1 after payload initialization.', 'Release publication must follow payload construction.');
+      if (action === 'acquire') attempt(2, 3, 'The consumer acquire observed sequence 1, establishing the synchronization edge.', 'The consumer cannot acquire the new sequence before it is published.');
+      if (action === 'read') attempt(3, 4, 'The consumer may now read and move the initialized payload.', 'Reading before the acquire observes publication has no visibility proof.');
+      if (action === 'reset') {
+        stage = 0;
+        blocked = null;
+        render('The producer owns the empty slot.');
+      }
+    });
+
+    render('The producer owns the empty slot.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1416,6 +1472,7 @@
     document.querySelectorAll('[data-ms-cache]').forEach(initCacheLab);
     document.querySelectorAll('[data-ms-pool]').forEach(initPoolLab);
     document.querySelectorAll('[data-ms-layout-lab]').forEach(initLayoutLab);
+    document.querySelectorAll('[data-ms-publish]').forEach(initPublishLab);
   }
 
   if (document.readyState === 'loading') {
