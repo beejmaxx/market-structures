@@ -1456,6 +1456,66 @@
     render('The producer owns the empty slot.');
   }
 
+  function initBenchmarkLab(root) {
+    const labels = ['generate trace', 'build state', 'warm up', 'timed operations', 'checksum', 'report'];
+    let timed = [];
+    let observed = false;
+    let samples = 0;
+    let missing = null;
+    let verdict = 'unconfigured';
+    const container = root.querySelector('[data-benchmark-stages]');
+    const log = root.querySelector('[data-benchmark-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      setStat('timed', timed.length);
+      setStat('observed', observed ? 'yes' : 'no');
+      setStat('samples', samples);
+      setStat('verdict', verdict);
+      container.replaceChildren();
+      labels.forEach((label, index) => {
+        const stage = document.createElement('span');
+        stage.className = `ms-benchmark-stage${timed.includes(index) ? ' timed' : ''}${observed && index === 4 ? ' observed' : ''}${missing === index ? ' missing' : ''}`;
+        stage.textContent = label;
+        container.append(stage);
+      });
+      log.textContent = message;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      missing = null;
+      if (action === 'clean') {
+        timed = [3]; observed = true; samples = 50; verdict = 'usable';
+        render('Setup and warmup are outside the declared operation boundary; repeated timed work feeds a verified checksum.');
+      }
+      if (action === 'setup') {
+        timed = [1, 2, 3]; observed = true; samples = 50; verdict = 'different question';
+        render('This can measure startup/component cost, but it cannot be labeled steady-state operation latency.');
+      }
+      if (action === 'dead') {
+        timed = [3]; observed = false; samples = 50; missing = 4; verdict = 'invalid';
+        render('Without an observable dependent result, the optimizer may remove or transform the work beyond recognition.');
+      }
+      if (action === 'oneshot') {
+        timed = [3]; observed = true; samples = 1; verdict = 'insufficient';
+        render('One sample cannot characterize variation or tail latency, even with a clean boundary.');
+      }
+      if (action === 'reset') {
+        timed = []; observed = false; samples = 0; verdict = 'unconfigured';
+        render('Select a boundary audit.');
+      }
+    });
+
+    render('Select a boundary audit.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1473,6 +1533,7 @@
     document.querySelectorAll('[data-ms-pool]').forEach(initPoolLab);
     document.querySelectorAll('[data-ms-layout-lab]').forEach(initLayoutLab);
     document.querySelectorAll('[data-ms-publish]').forEach(initPublishLab);
+    document.querySelectorAll('[data-ms-benchmark]').forEach(initBenchmarkLab);
   }
 
   if (document.readyState === 'loading') {

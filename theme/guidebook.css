@@ -715,6 +715,30 @@
 .ms-publish-stage.complete { border-style: solid; border-color: #7ac7e3; background: color-mix(in srgb, #7ac7e3 14%, var(--bg)); color: var(--fg); }
 .ms-publish-stage.blocked { border-color: #ef9a9a; color: #ef9a9a; }
 
+.ms-benchmark-flow {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(5rem, 1fr));
+  gap: 0.35rem;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-benchmark-stage {
+  display: grid;
+  min-width: 5rem;
+  min-height: 3.8rem;
+  place-items: center;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+  color: var(--icons);
+  text-align: center;
+  font: 0.62em var(--mono-font);
+}
+
+.ms-benchmark-stage.timed { border-color: #d49b32; background: color-mix(in srgb, #d49b32 15%, var(--bg)); color: var(--fg); }
+.ms-benchmark-stage.observed { box-shadow: inset 0 -4px #7ac7e3; }
+.ms-benchmark-stage.missing { border-style: dashed; border-color: #ef9a9a; color: #ef9a9a; }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

@@ -31,6 +31,7 @@
 # Evidence and synthesis
 
 - [Concurrency and atomics](14-concurrency-atomics.md)
+- [Benchmark design](15-benchmark-design.md)
 
 # Program
 
