@@ -26,6 +26,7 @@
 
 - [Memory hierarchy](11-memory-hierarchy.md)
 - [Allocation, arenas, slabs, and pools](12-allocation-pools.md)
+- [Data layout and indirection](13-layout-indirection.md)
 
 # Program
 

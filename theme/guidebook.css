@@ -655,6 +655,32 @@
 .ms-pool-slot.selected { box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 50%, transparent); }
 .ms-pool-slot.free-top { border-color: #d49b32; }
 
+.ms-layout-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.ms-layout-compare > div > strong { font: 0.75em var(--mono-font); }
+.ms-layout-cells { display: grid; gap: 0.2rem; margin-block-start: 0.45rem; }
+.ms-layout-cells.aos { grid-template-columns: repeat(4, minmax(2.3rem, 1fr)); }
+.ms-layout-cells.soa { grid-template-columns: repeat(6, minmax(2.3rem, 1fr)); }
+
+.ms-field-cell {
+  display: grid;
+  min-height: 2.2rem;
+  place-items: center;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+  color: var(--icons);
+  font: 0.58em var(--mono-font);
+}
+
+.ms-field-cell.useful { border-color: #d49b32; background: color-mix(in srgb, #d49b32 15%, var(--bg)); color: var(--fg); }
+.ms-field-cell.record-edge { border-inline-start-width: 3px; }
+.ms-field-cell.stream-edge { border-block-start-width: 3px; }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

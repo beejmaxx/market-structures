@@ -1333,6 +1333,73 @@
     render('All slots are free; allocation will pop slot 0.');
   }
 
+  function initLayoutLab(root) {
+    const fields = ['id', 'price', 'qty', 'flags'];
+    const count = 6;
+    const aosRoot = root.querySelector('[data-layout-aos]');
+    const soaRoot = root.querySelector('[data-layout-soa]');
+    const log = root.querySelector('[data-layout-log]');
+    let selected = () => false;
+    let stats = { useful: 0, streams: 0, records: 0, shape: 'none' };
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function makeCell(record, field, extraClass = '') {
+      const cell = document.createElement('span');
+      cell.className = `ms-field-cell${selected(record, field) ? ' useful' : ''}${extraClass}`;
+      cell.textContent = `${field} ${record}`;
+      return cell;
+    }
+
+    function render(message) {
+      Object.entries(stats).forEach(([name, value]) => setStat(name, value));
+      aosRoot.replaceChildren();
+      for (let record = 0; record < count; record += 1) {
+        fields.forEach((field, fieldIndex) => {
+          aosRoot.append(makeCell(record, field, fieldIndex === 0 ? ' record-edge' : ''));
+        });
+      }
+      soaRoot.replaceChildren();
+      fields.forEach((field) => {
+        for (let record = 0; record < count; record += 1) {
+          soaRoot.append(makeCell(record, field, record === 0 ? ' stream-edge' : ''));
+        }
+      });
+      log.textContent = message;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === 'price') {
+        selected = (_, field) => field === 'price';
+        stats = { useful: 6, streams: 1, records: 6, shape: 'field scan' };
+        render('SoA places the six useful price fields in one dense stream; AoS interleaves three unused fields per record.');
+      }
+      if (action === 'record') {
+        selected = (record) => record === 2;
+        stats = { useful: 4, streams: 4, records: 1, shape: 'one record' };
+        render('AoS keeps the four fields of order 2 adjacent; SoA gathers them from four field streams.');
+      }
+      if (action === 'cold') {
+        selected = (_, field) => field === 'flags';
+        stats = { useful: 6, streams: 1, records: 6, shape: 'cold scan' };
+        render('A flags-only scan favors dense field storage, but splitting cold flags adds an indirection when a full record needs them.');
+      }
+      if (action === 'reset') {
+        selected = () => false;
+        stats = { useful: 0, streams: 0, records: 0, shape: 'none' };
+        render('Select an access pattern.');
+      }
+    });
+
+    render('Select an access pattern.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1348,6 +1415,7 @@
     document.querySelectorAll('[data-ms-range]').forEach(initRangeLab);
     document.querySelectorAll('[data-ms-cache]').forEach(initCacheLab);
     document.querySelectorAll('[data-ms-pool]').forEach(initPoolLab);
+    document.querySelectorAll('[data-ms-layout-lab]').forEach(initLayoutLab);
   }
 
   if (document.readyState === 'loading') {
