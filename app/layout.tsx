@@ -13,9 +13,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://market-structures.mekdigital.chatgpt.site'),
   title: 'Market Structures — Data Structures for Low Latency',
   description:
     'An interactive, evidence-first guide to data structures, performance, and HFT systems.',
+  openGraph: {
+    title: 'Market Structures — Data Structures for Low Latency',
+    description:
+      'An interactive, evidence-first guide to data structures, performance, and HFT systems.',
+    url: '/',
+    siteName: 'Market Structures',
+    images: [
+      {
+        url: '/og.png',
+        width: 1672,
+        height: 941,
+        alt: 'Market Structures: Data Structures for Low Latency',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Market Structures — Data Structures for Low Latency',
+    description:
+      'An interactive, evidence-first guide to data structures, performance, and HFT systems.',
+    images: ['/og.png'],
+  },
 };
 
 export default function RootLayout({
