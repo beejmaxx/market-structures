@@ -1,0 +1,315 @@
+/* Shared guidebook identity. Typography remains mdBook's native typography. */
+
+.chapter-subtitle {
+  margin-block-end: 1.5em;
+  color: var(--icons);
+  font-size: 1.08em;
+}
+
+.chapter-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.25em;
+  margin-block: 1.5em 3em;
+  padding-block: 0.75em;
+  border-block: 1px solid var(--table-border-color);
+  color: var(--icons);
+  font-size: 0.8em;
+}
+
+.chapter-meta span:not(:last-child) {
+  padding-inline-end: 1.25em;
+  border-inline-end: 1px solid var(--table-border-color);
+}
+
+.content main {
+  text-wrap: pretty;
+}
+
+/* Compact diagrams that inherit the active mdBook theme. */
+
+.ms-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-block: 1.4rem 2rem;
+}
+
+.ms-layout > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--table-border-color);
+  border-block-start: 3px solid #7ac7e3;
+  background: var(--table-alternate-bg);
+}
+
+.ms-layout strong {
+  font-family: var(--mono-font);
+  font-size: 0.9em;
+}
+
+.ms-layout span {
+  color: var(--icons);
+  font-size: 0.78em;
+}
+
+.ms-lab {
+  margin-block: 1.8rem 2.4rem;
+  padding: 1rem;
+  border: 1px solid var(--table-border-color);
+  border-radius: 6px;
+  background: var(--table-alternate-bg);
+}
+
+.ms-lab-head {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.8fr) minmax(15rem, 1.2fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.ms-lab-head span {
+  color: #d49b32;
+  font-family: var(--mono-font);
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.ms-lab-head h3 {
+  margin: 0.25rem 0 0;
+}
+
+.ms-lab-head p {
+  margin: 0;
+  color: var(--icons);
+  font-size: 0.88em;
+}
+
+.ms-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-block: 1rem;
+}
+
+.ms-controls button {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--table-border-color);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 600 0.78em var(--mono-font);
+  cursor: pointer;
+}
+
+.ms-controls button:hover,
+.ms-controls button:focus-visible {
+  border-color: #7ac7e3;
+  outline: none;
+}
+
+.ms-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--table-border-color);
+  background: var(--table-border-color);
+}
+
+.ms-stats > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 0.6rem;
+  background: var(--bg);
+}
+
+.ms-stats span {
+  color: var(--icons);
+  font-size: 0.68em;
+}
+
+.ms-stats strong {
+  font-family: var(--mono-font);
+  font-size: 1.1em;
+}
+
+.ms-slots {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(2.25rem, 1fr));
+  gap: 0.35rem;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-slots span {
+  display: grid;
+  min-width: 2.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px dashed var(--table-border-color);
+  color: var(--icons);
+  font: 0.75em var(--mono-font);
+}
+
+.ms-slots span.live {
+  border-style: solid;
+  border-color: #7ac7e3;
+  background: color-mix(in srgb, #7ac7e3 16%, var(--bg));
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.ms-slots span.new {
+  animation: ms-pulse 0.45s ease-out;
+}
+
+.ms-slots.static {
+  margin-block: 1rem 2rem;
+}
+
+.ms-log {
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--icons);
+  font: 0.78em/1.5 var(--mono-font);
+}
+
+.ms-list {
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
+  margin-block: 1rem;
+  padding-block: 0.5rem;
+  overflow-x: auto;
+}
+
+.ms-node {
+  position: relative;
+  display: grid;
+  min-width: 8.5rem;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.ms-node::after {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 0.3rem);
+  width: 0.9rem;
+  border-block-start: 1px solid var(--icons);
+  content: "";
+}
+
+.ms-node:last-child::after {
+  display: none;
+}
+
+.ms-node.selected {
+  border-color: #d49b32;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 25%, transparent);
+}
+
+.ms-node strong {
+  grid-column: 1 / -1;
+  padding: 0.55rem;
+  border-block-end: 1px solid var(--table-border-color);
+  font-family: var(--mono-font);
+  text-align: center;
+}
+
+.ms-node span {
+  padding: 0.4rem;
+  color: var(--icons);
+  font: 0.68em var(--mono-font);
+  text-align: center;
+}
+
+.ms-node small {
+  grid-column: 1 / -1;
+  padding: 0.35rem;
+  border-block-start: 1px solid var(--table-border-color);
+  color: var(--icons);
+  font: 0.62em var(--mono-font);
+  text-align: center;
+}
+
+.ms-writes {
+  min-height: 5.5rem;
+  margin-block-end: 0;
+  white-space: pre-wrap;
+}
+
+@keyframes ms-pulse {
+  0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
+  100% { transform: scale(1); }
+}
+
+/* Terminal-inspired code palette shared by the other guidebooks. */
+
+.content pre,
+.content pre code.hljs {
+  background-color: #303030;
+  color: #eeeeee;
+}
+
+.content pre code.hljs .hljs-comment,
+.content pre code.hljs .hljs-quote { color: #7ac7e3; }
+
+.content pre code.hljs .hljs-keyword,
+.content pre code.hljs .hljs-selector-tag,
+.content pre code.hljs .hljs-type,
+.content pre code.hljs .hljs-built_in,
+.content pre code.hljs .hljs-builtin-name,
+.content pre code.hljs .hljs-literal { color: #e7df78; }
+
+.content pre code.hljs .hljs-string,
+.content pre code.hljs .hljs-regexp,
+.content pre code.hljs .hljs-meta { color: #ef9a9a; }
+
+.content pre code.hljs .hljs-title,
+.content pre code.hljs .hljs-title.function_ { color: #8fe895; }
+
+.content pre code.hljs .hljs-number,
+.content pre code.hljs .hljs-symbol { color: #d7cd80; }
+
+/* Same wide previous/next targets used by the guidebook template. */
+
+@media only screen and (min-width: 801px) {
+  .nav-wide-wrapper,
+  #mdbook-sidebar-toggle-anchor:checked ~ .page-wrapper .nav-wide-wrapper {
+    display: block;
+  }
+
+  .nav-wrapper,
+  #mdbook-sidebar-toggle-anchor:checked ~ .page-wrapper .nav-wrapper {
+    display: none;
+  }
+
+  .nav-chapters {
+    top: var(--menu-bar-height);
+    bottom: 0;
+    min-width: 90px;
+    height: auto;
+    border-radius: 0;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 700px) {
+  .chapter-meta span { border-inline-end: 0 !important; }
+  .ms-layout,
+  .ms-lab-head { grid-template-columns: 1fr; }
+  .ms-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-slots span.new { animation: none; }
+}

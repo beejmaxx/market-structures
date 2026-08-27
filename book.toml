@@ -1,0 +1,35 @@
+[book]
+title = "Market Structures"
+authors = ["Bijan"]
+description = "Data structures, memory behavior, and evidence-driven low-latency engineering."
+language = "en"
+src = "book-src"
+
+[build]
+build-dir = "book"
+
+[rust]
+edition = "2024"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+additional-css = ["theme/guidebook.css"]
+additional-js = ["theme/market-structures.js"]
+git-repository-url = "https://github.com/beejmaxx/market-structures"
+edit-url-template = "https://github.com/beejmaxx/market-structures/edit/main/{path}"
+site-url = "/market-structures/"
+
+[output.html.search]
+enable = true
+limit-results = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 2
+
+[output.html.fold]
+enable = true
+level = 1
