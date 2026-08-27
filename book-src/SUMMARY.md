@@ -32,6 +32,7 @@
 
 - [Concurrency and atomics](14-concurrency-atomics.md)
 - [Benchmark design](15-benchmark-design.md)
+- [Order-book representations](16-order-book-representations.md)
 
 # Program
 

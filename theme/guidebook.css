@@ -739,6 +739,38 @@
 .ms-benchmark-stage.observed { box-shadow: inset 0 -4px #7ac7e3; }
 .ms-benchmark-stage.missing { border-style: dashed; border-color: #ef9a9a; color: #ef9a9a; }
 
+.ms-book {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.ms-book section {
+  min-height: 10rem;
+  padding: 0.7rem;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+}
+
+.ms-book section > strong { font: 0.68em var(--mono-font); }
+
+.ms-book-level {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin-block: 0.4rem;
+  padding: 0.45rem;
+  border-inline-start: 3px solid #7ac7e3;
+  background: var(--table-alternate-bg);
+  font: 0.66em var(--mono-font);
+}
+
+.ms-book-level.ask { border-inline-start-color: #ef9a9a; }
+.ms-book-level span { color: var(--icons); }
+.ms-book-empty { color: var(--icons); font: 0.7em var(--mono-font); }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

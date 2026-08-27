@@ -22,7 +22,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 13 | Layout and indirection | When should data be AoS, SoA, packed, indexed, or pointer-linked? | **Chapter available** |
 | 14 | Concurrency primitives | What memory-order guarantees does the algorithm actually need? | **Chapter available** |
 | 15 | Benchmark design | Which experiment distinguishes the proposed mechanisms? | **Chapter available** |
-| 16 | Order-book representations | Which access paths deserve independent indexes? | Planned |
+| 16 | Order-book representations | Which access paths deserve independent indexes? | **Chapter available** |
 | 17 | C++ and Rust implementations | How do language constraints change the best representation? | Planned |
 | 18 | Capstone and defense | Can the system survive correctness, workload, and measurement challenges? | Planned |
 
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Order-book representations**. It will not be linked
+The next chapter should be **C++ and Rust engineering**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive order-book trace;
+- a language-boundary decision matrix;
 - a blank-file build; and
 - a measurement plan.
 

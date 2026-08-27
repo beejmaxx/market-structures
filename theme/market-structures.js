@@ -1516,6 +1516,175 @@
     render('Select a boundary audit.');
   }
 
+  function initBookLab(root) {
+    const trace = [
+      { type: 'add', id: 'B1', side: 'bid', price: 100, qty: 5 },
+      { type: 'add', id: 'B2', side: 'bid', price: 100, qty: 3 },
+      { type: 'add', id: 'S1', side: 'ask', price: 103, qty: 4 },
+      { type: 'add', id: 'S2', side: 'ask', price: 101, qty: 2 },
+      { type: 'add', id: 'B3', side: 'bid', price: 102, qty: 3 },
+      { type: 'cancel', id: 'B1' },
+      { type: 'modify', id: 'B2', qty: 1 },
+      { type: 'add', id: 'S3', side: 'ask', price: 100, qty: 3 },
+    ];
+    let position;
+    let orders;
+    let levels;
+    let tradeCount;
+    const asksRoot = root.querySelector('[data-book-asks]');
+    const bidsRoot = root.querySelector('[data-book-bids]');
+    const log = root.querySelector('[data-book-log]');
+
+    function resetState() {
+      position = 0;
+      orders = new Map();
+      levels = { bid: new Map(), ask: new Map() };
+      tradeCount = 0;
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function sortedPrices(side) {
+      return [...levels[side].keys()].sort((a, b) => side === 'bid' ? b - a : a - b);
+    }
+
+    function renderSide(rootElement, side) {
+      rootElement.replaceChildren();
+      const prices = sortedPrices(side);
+      if (!prices.length) {
+        const empty = document.createElement('p');
+        empty.className = 'ms-book-empty';
+        empty.textContent = 'empty';
+        rootElement.append(empty);
+        return;
+      }
+      prices.forEach((price) => {
+        const ids = levels[side].get(price);
+        const row = document.createElement('div');
+        row.className = `ms-book-level ${side}`;
+        const priceCell = document.createElement('strong');
+        priceCell.textContent = String(price);
+        const queue = document.createElement('span');
+        queue.textContent = ids.map((id) => `${id}:${orders.get(id).qty}`).join(' -> ');
+        const total = document.createElement('b');
+        total.textContent = `Σ${ids.reduce((sum, id) => sum + orders.get(id).qty, 0)}`;
+        row.append(priceCell, queue, total);
+        rootElement.append(row);
+      });
+    }
+
+    function render(message) {
+      renderSide(asksRoot, 'ask');
+      renderSide(bidsRoot, 'bid');
+      const bestBid = sortedPrices('bid')[0] ?? '—';
+      const bestAsk = sortedPrices('ask')[0] ?? '—';
+      setStat('position', `${position} / ${trace.length}`);
+      setStat('live', orders.size);
+      setStat('bbo', `${bestBid} / ${bestAsk}`);
+      setStat('trades', tradeCount);
+      log.textContent = message;
+    }
+
+    function removeOrder(id) {
+      const order = orders.get(id);
+      if (!order) return false;
+      const queue = levels[order.side].get(order.price);
+      const index = queue.indexOf(id);
+      if (index >= 0) queue.splice(index, 1);
+      if (!queue.length) levels[order.side].delete(order.price);
+      orders.delete(id);
+      return true;
+    }
+
+    function rest(order) {
+      if (!levels[order.side].has(order.price)) levels[order.side].set(order.price, []);
+      levels[order.side].get(order.price).push(order.id);
+      orders.set(order.id, order);
+    }
+
+    function add(input) {
+      const incoming = { ...input };
+      const opposite = incoming.side === 'bid' ? 'ask' : 'bid';
+      const fills = [];
+      while (incoming.qty > 0) {
+        const bestPrice = sortedPrices(opposite)[0];
+        if (bestPrice === undefined) break;
+        const crosses = incoming.side === 'bid' ? incoming.price >= bestPrice : incoming.price <= bestPrice;
+        if (!crosses) break;
+        const makerId = levels[opposite].get(bestPrice)[0];
+        const maker = orders.get(makerId);
+        const quantity = Math.min(incoming.qty, maker.qty);
+        incoming.qty -= quantity;
+        maker.qty -= quantity;
+        tradeCount += 1;
+        fills.push(`${incoming.id}×${makerId} ${quantity}@${bestPrice}`);
+        if (maker.qty === 0) removeOrder(makerId);
+      }
+      if (incoming.qty > 0) rest(incoming);
+      return fills.length ? `Trades: ${fills.join('; ')}.${incoming.qty ? ` ${incoming.id} rests with ${incoming.qty}.` : ''}` : `Added ${incoming.id}: ${incoming.qty}@${incoming.price} ${incoming.side}.`;
+    }
+
+    function applyNext() {
+      if (position >= trace.length) return 'The trace is complete.';
+      const operation = trace[position];
+      position += 1;
+      if (operation.type === 'add') return add(operation);
+      if (operation.type === 'cancel') {
+        const removed = removeOrder(operation.id);
+        return removed ? `Cancelled ${operation.id}; ID, FIFO, aggregate, and possibly its level changed.` : `Cancel ${operation.id} was absent.`;
+      }
+      const order = orders.get(operation.id);
+      if (!order) return `Modify ${operation.id} was absent.`;
+      const old = order.qty;
+      order.qty = operation.qty;
+      return `Reduced ${operation.id} from ${old} to ${operation.qty}; FIFO position stayed unchanged.`;
+    }
+
+    function validate() {
+      const seen = new Set();
+      let error = null;
+      ['bid', 'ask'].forEach((side) => {
+        levels[side].forEach((ids, price) => {
+          if (!ids.length) error = `empty ${side} level ${price}`;
+          ids.forEach((id) => {
+            const order = orders.get(id);
+            if (!order || order.side !== side || order.price !== price || order.qty <= 0) error = `bad queue entry ${id}`;
+            if (seen.has(id)) error = `duplicate queue entry ${id}`;
+            seen.add(id);
+          });
+        });
+      });
+      if (seen.size !== orders.size) error = 'ID index and queues have different live sets';
+      const bid = sortedPrices('bid')[0];
+      const ask = sortedPrices('ask')[0];
+      if (bid !== undefined && ask !== undefined && bid >= ask) error = 'book remains crossed';
+      return error ? `Invariant failure: ${error}.` : `Valid: ${orders.size} live orders appear exactly once, levels are nonempty, and the book is uncrossed.`;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === 'step') render(applyNext());
+      if (action === 'run') {
+        let message = 'The trace is complete.';
+        while (position < trace.length) message = applyNext();
+        render(message);
+      }
+      if (action === 'validate') render(validate());
+      if (action === 'reset') {
+        resetState();
+        render('The book is empty.');
+      }
+    });
+
+    resetState();
+    render('The book is empty.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1534,6 +1703,7 @@
     document.querySelectorAll('[data-ms-layout-lab]').forEach(initLayoutLab);
     document.querySelectorAll('[data-ms-publish]').forEach(initPublishLab);
     document.querySelectorAll('[data-ms-benchmark]').forEach(initBenchmarkLab);
+    document.querySelectorAll('[data-ms-book]').forEach(initBookLab);
   }
 
   if (document.readyState === 'loading') {
