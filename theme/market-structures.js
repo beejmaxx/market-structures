@@ -792,6 +792,71 @@
     render('Every slot is empty.');
   }
 
+  function initOrderedLab(root) {
+    const sorted = [8, 17, 29, 42, 55, 63, 71];
+    const tree = [42, 17, 63, 8, 29, 55, 71];
+    const arrayRoot = root.querySelector('[data-ordered-array]');
+    const treeRoot = root.querySelector('[data-ordered-tree]');
+    const log = root.querySelector('[data-ordered-log]');
+    let arrayPath = [];
+    let treePath = [];
+    let answer = null;
+
+    function renderNodes(container, values, path) {
+      container.replaceChildren();
+      values.forEach((value, index) => {
+        const node = document.createElement('span');
+        node.className = `ms-ordered-node${path.includes(index) ? ' visited' : ''}${value === answer ? ' answer' : ''}`;
+        node.textContent = String(value);
+        container.append(node);
+      });
+    }
+
+    function render(message) {
+      renderNodes(arrayRoot, sorted, arrayPath);
+      renderNodes(treeRoot, tree, treePath);
+      log.textContent = message;
+    }
+
+    function query(target) {
+      arrayPath = [];
+      let lo = 0;
+      let hi = sorted.length;
+      while (lo < hi) {
+        const mid = lo + Math.floor((hi - lo) / 2);
+        arrayPath.push(mid);
+        if (sorted[mid] < target) lo = mid + 1;
+        else hi = mid;
+      }
+      answer = lo < sorted.length ? sorted[lo] : null;
+
+      treePath = [];
+      let index = 0;
+      let candidate = null;
+      while (index < tree.length) {
+        treePath.push(index);
+        if (tree[index] >= target) {
+          candidate = tree[index];
+          index = index * 2 + 1;
+        } else index = index * 2 + 2;
+      }
+      render(`lower_bound(${target}) = ${answer ?? 'end'}; array touched ${arrayPath.length}, tree touched ${treePath.length}. Tree candidate: ${candidate ?? 'end'}.`);
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      if (button.dataset.action === 'reset') {
+        arrayPath = [];
+        treePath = [];
+        answer = null;
+        render('Select a query to expose both access paths.');
+      } else if (button.dataset.key) query(Number(button.dataset.key));
+    });
+
+    render('Select a query to expose both access paths.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -800,6 +865,7 @@
     document.querySelectorAll('[data-ms-stack]').forEach(initStackLab);
     document.querySelectorAll('[data-ms-heap]').forEach(initHeapLab);
     document.querySelectorAll('[data-ms-hash]').forEach(initHashLab);
+    document.querySelectorAll('[data-ms-ordered]').forEach(initOrderedLab);
   }
 
   if (document.readyState === 'loading') {

@@ -16,6 +16,7 @@
 
 - [Heaps, priority queues, and sorting](04-heaps-sorting.md)
 - [Hashing under pressure](05-hashing.md)
+- [Ordered indexes](06-ordered-indexes.md)
 
 # Program
 

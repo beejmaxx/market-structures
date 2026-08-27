@@ -480,6 +480,31 @@
 .ms-hash-slot.tombstone { border-style: solid; border-color: #ef9a9a; color: #ef9a9a; }
 .ms-hash-slot.probed { box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 40%, transparent); }
 
+.ms-ordered-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  margin-block: 0.7rem;
+}
+
+.ms-ordered-row > strong { font: 0.7em var(--mono-font); }
+.ms-ordered-slots { display: flex; gap: 0.35rem; overflow-x: auto; }
+.ms-ordered-slots.tree { gap: 0.7rem; }
+
+.ms-ordered-node {
+  display: grid;
+  min-width: 2.7rem;
+  min-height: 2.7rem;
+  place-items: center;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+  font: 0.76em var(--mono-font);
+}
+
+.ms-ordered-node.visited { border-color: #d49b32; background: color-mix(in srgb, #d49b32 14%, var(--bg)); }
+.ms-ordered-node.answer { border-color: #7ac7e3; background: color-mix(in srgb, #7ac7e3 16%, var(--bg)); }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }
