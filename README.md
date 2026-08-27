@@ -3,6 +3,8 @@
 An interactive learning book for data structures, low-latency systems, and the
 HFT experiments in this workspace.
 
+Public edition: https://beejmaxx.github.io/market-structures/
+
 The book contains an 18-module curriculum, persistent 0–4 mastery scores,
 search, light/dark themes, and interactive labs for memory layout, LIFO slot
 reuse, open-address hashing, and order-book representation.
@@ -14,12 +16,14 @@ npm install
 npm run dev
 ```
 
-Build the deployable edition:
+Build the static GitHub Pages edition:
 
 ```sh
 npm run build
 ```
 
+The `main` branch deploys through GitHub Actions. The app is a portable Vite
+site with no ChatGPT Sites runtime or hosting dependency.
+
 The longer authoring curriculum and assessment bank live in the adjacent
 `../data-structures` directory.
-

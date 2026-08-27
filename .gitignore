@@ -11,11 +11,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/.vinext/
-/out/
-
 # misc
 .DS_Store
 *.pem
@@ -29,10 +24,12 @@ yarn-error.log*
 # local environment
 .env*
 
-# deployment and generated files
+# generated files
 .vercel
-next-env.d.ts
 /dist/
+/.next/
+/.vinext/
 /.wrangler/
+next-env.d.ts
 /outputs/
 /work/
