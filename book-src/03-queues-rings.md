@@ -157,6 +157,80 @@ Unsigned subtraction needs deliberate wraparound. One safe expression for
 moving backward is `(index + N - 1) % N`; a power-of-two implementation can use
 wrapping arithmetic followed by a mask.
 
+## Rust's `VecDeque<T>` is the standard reference
+
+Rust already provides [`std::collections::VecDeque<T>`](https://doc.rust-lang.org/std/collections/struct.VecDeque.html),
+a double-ended queue implemented with a **growable ring buffer**.
+
+```rust
+use std::collections::VecDeque;
+
+let mut updates = VecDeque::with_capacity(8);
+updates.push_back("add 101");
+updates.push_back("cancel 84");
+updates.push_front("snapshot boundary");
+
+assert_eq!(updates.front(), Some(&"snapshot boundary"));
+assert_eq!(updates.pop_front(), Some("snapshot boundary"));
+assert_eq!(updates.pop_back(), Some("cancel 84"));
+```
+
+It is the right correctness oracle for a custom Rust deque. It is not the same
+thing as the bounded ring in the interactive lab:
+
+| Property | `VecDeque<T>` | Fixed `Ring<T, N>` |
+|---|---|---|
+| capacity | growable | compile-time or construction-time bound |
+| allocation | may allocate when capacity grows | none after construction |
+| full state | normally grows instead | must have an explicit policy |
+| front/back operations | amortized constant time | constant work under the declared policy |
+| wrapped storage | possible | possible |
+| concurrency | none by itself | none by itself |
+
+### Wrapped contents are two slices
+
+Logical queue order can cross the physical end of the allocation. `as_slices()`
+exposes that layout without rearranging it:
+
+```rust
+let (first, second) = updates.as_slices();
+
+for update in first.iter().chain(second.iter()) {
+    process(update);
+}
+```
+
+The logical sequence is `first` followed by `second`. Either slice can be
+empty. Code that assumes the entire deque is represented by one slice is
+incorrect after wraparound.
+
+When an algorithm truly requires one contiguous slice, `make_contiguous()`
+rearranges the elements and returns `&mut [T]`:
+
+```rust
+let contiguous: &mut [&str] = updates.make_contiguous();
+contiguous.sort_unstable();
+```
+
+That rearrangement can move elements. It is a deliberate conversion cost, not
+a free property of ring storage.
+
+### Reserving is not bounding
+
+`VecDeque::with_capacity(8)` creates space for at least eight elements, and
+`reserve` can move growth outside a known phase. Neither call establishes a
+maximum. A later `push_front` or `push_back` may still grow the allocation.
+
+That makes `VecDeque` useful for:
+
+- a reference model for operation-sequence tests;
+- queues that should grow rather than reject work;
+- studying wrapped storage through `as_slices()`; and
+- measuring the difference between pre-reserved and growth-boundary traffic.
+
+It is not, by itself, proof that an enqueue on the production hot path cannot
+allocate.
+
 ## Object lifetime still exists inside fixed storage
 
 An array of `N` slots is not necessarily an array of `N` live `T` objects. A
@@ -241,7 +315,8 @@ Require:
 - `try_push`, `front`, `try_pop`, `size`, `capacity`, and `clear`;
 - a declared full policy;
 - an invariant checker after every debug mutation;
-- operation-sequence differential tests against `std::deque`; and
+- C++ operation-sequence differential tests against `std::deque`;
+- Rust operation-sequence differential tests against `VecDeque`; and
 - wraparound tests that cross the physical boundary repeatedly.
 
 Then extend the ring to a deque. Do not begin with concurrency.
@@ -256,6 +331,7 @@ Separate these questions:
 - power-of-two masking versus modulo for several capacities;
 - different element sizes and move costs;
 - fixed ring versus `std::deque`; and
+- fixed Rust ring versus `VecDeque`, both pre-reserved and across growth;
 - the cost of the chosen full policy.
 
 Pre-fill structures before timing steady-state operations. Report the latency
@@ -271,7 +347,9 @@ You own this chapter when you can answer:
    write slot?
 3. Why is overwriting acceptable for some streams and invalid for others?
 4. Which slots contain live objects after an arbitrary wrapped sequence?
-5. What new proof obligations appear when producer and consumer become
+5. Why can `VecDeque::as_slices()` return two non-empty slices, and what does
+   `make_contiguous()` cost conceptually?
+6. What new proof obligations appear when producer and consumer become
    different threads?
 
 Next planned module: **Heaps, priority, and sorting**.
