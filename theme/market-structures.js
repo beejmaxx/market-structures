@@ -553,12 +553,148 @@
     render('The stack is empty.');
   }
 
+  function initHeapLab(root) {
+    const sequence = [42, 17, 63, 8, 55, 29, 71, 12, 48, 34];
+    let heap = [];
+    let cursor = 0;
+    let comparisons = 0;
+    let swaps = 0;
+    let path = new Set();
+    const container = root.querySelector('[data-heap-nodes]');
+    const log = root.querySelector('[data-heap-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function exchange(left, right) {
+      [heap[left], heap[right]] = [heap[right], heap[left]];
+      swaps += 1;
+      path.add(left);
+      path.add(right);
+    }
+
+    function greater(left, right) {
+      comparisons += 1;
+      return heap[left] > heap[right];
+    }
+
+    function siftUp(start) {
+      let index = start;
+      path.add(index);
+      while (index > 0) {
+        const parent = Math.floor((index - 1) / 2);
+        if (!greater(index, parent)) break;
+        exchange(index, parent);
+        index = parent;
+      }
+    }
+
+    function siftDown(start) {
+      let index = start;
+      path.add(index);
+      while (true) {
+        const left = index * 2 + 1;
+        if (left >= heap.length) break;
+        const right = left + 1;
+        let best = left;
+        if (right < heap.length && greater(right, left)) best = right;
+        if (!greater(best, index)) break;
+        exchange(index, best);
+        index = best;
+      }
+    }
+
+    function resetCounters() {
+      comparisons = 0;
+      swaps = 0;
+      path = new Set();
+    }
+
+    function render(message) {
+      setStat('size', heap.length);
+      setStat('root', heap.length ? heap[0] : 'none');
+      setStat('comparisons', comparisons);
+      setStat('swaps', swaps);
+      container.replaceChildren();
+      heap.forEach((value, index) => {
+        const node = document.createElement('div');
+        node.className = `ms-heap-node${path.has(index) ? ' path' : ''}`;
+        const key = document.createElement('strong');
+        key.textContent = String(value);
+        const label = document.createElement('span');
+        label.textContent = `index ${index}`;
+        node.append(key, label);
+        container.append(node);
+      });
+      log.textContent = message;
+    }
+
+    function nextValue() {
+      const value = sequence[cursor % sequence.length];
+      cursor += 1;
+      return value;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      resetCounters();
+
+      if (action === 'push') {
+        const value = nextValue();
+        heap.push(value);
+        siftUp(heap.length - 1);
+        render(`Appended ${value}, then repaired upward through indices ${Array.from(path).join(', ')}.`);
+      }
+      if (action === 'pop') {
+        if (heap.length === 0) {
+          render('The heap is empty.');
+        } else {
+          const maximum = heap[0];
+          const last = heap.pop();
+          if (heap.length) {
+            heap[0] = last;
+            siftDown(0);
+          }
+          render(`Removed maximum ${maximum}; the replacement repaired downward.`);
+        }
+      }
+      if (action === 'replace') {
+        if (heap.length === 0) {
+          render('Push at least one value before replacing the root.');
+        } else {
+          const old = heap[0];
+          const value = nextValue();
+          heap[0] = value;
+          siftDown(0);
+          render(`Replaced root ${old} with ${value}, then restored heap order.`);
+        }
+      }
+      if (action === 'heapify') {
+        heap = [12, 71, 8, 55, 29, 63, 17, 42];
+        for (let index = Math.floor(heap.length / 2) - 1; index >= 0; index -= 1) siftDown(index);
+        render('Bottom-up heapify repaired every internal node from right to left.');
+      }
+      if (action === 'reset') {
+        heap = [];
+        cursor = 0;
+        render('The heap is empty.');
+      }
+    });
+
+    render('The heap is empty.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
     document.querySelectorAll('[data-ms-ring]').forEach(initRingLab);
     document.querySelectorAll('[data-ms-array]').forEach(initArrayLab);
     document.querySelectorAll('[data-ms-stack]').forEach(initStackLab);
+    document.querySelectorAll('[data-ms-heap]').forEach(initHeapLab);
   }
 
   if (document.readyState === 'loading') {

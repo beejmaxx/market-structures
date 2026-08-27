@@ -12,6 +12,10 @@
 - [Stacks](03-stacks.md)
 - [Queues, deques, and rings](03-queues-rings.md)
 
+# Priority and lookup
+
+- [Heaps, priority queues, and sorting](04-heaps-sorting.md)
+
 # Program
 
 - [Learning roadmap](roadmap.md)

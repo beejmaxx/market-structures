@@ -431,6 +431,31 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 22%, transparent);
 }
 
+.ms-heap {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(3.25rem, 1fr));
+  gap: 0.4rem;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-heap-node {
+  display: grid;
+  min-width: 3.25rem;
+  min-height: 4rem;
+  place-items: center;
+  border: 1px solid var(--table-border-color);
+  background: var(--bg);
+}
+
+.ms-heap-node strong { font: 0.9em var(--mono-font); }
+.ms-heap-node span { color: var(--icons); font: 0.6em var(--mono-font); }
+
+.ms-heap-node.path {
+  border-color: #d49b32;
+  background: color-mix(in srgb, #d49b32 14%, var(--bg));
+}
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }
