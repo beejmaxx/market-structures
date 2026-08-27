@@ -857,6 +857,53 @@
     render('Select a query to expose both access paths.');
   }
 
+  function initTrieLab(root) {
+    const words = new Set(['AMD', 'AMZN', 'ASK']);
+    const pathRoot = root.querySelector('[data-trie-path]');
+    const log = root.querySelector('[data-trie-log]');
+
+    function render(text, mode) {
+      pathRoot.replaceChildren();
+      const labels = [{ label: 'root', missing: false }];
+      let prefix = '';
+      for (const character of text) {
+        prefix += character;
+        const exists = [...words].some((word) => word.startsWith(prefix));
+        labels.push({ label: character, missing: !exists });
+        if (!exists) break;
+      }
+      labels.forEach((label, index) => {
+        const node = document.createElement('span');
+        const isTerminal = mode === 'word' && index === labels.length - 1 && words.has(text);
+        node.className = `ms-trie-node${isTerminal ? ' terminal' : ''}${label.missing ? ' missing' : ''}`;
+        node.textContent = label.label;
+        pathRoot.append(node);
+      });
+
+      if (mode === 'prefix') {
+        const matches = [...words].filter((word) => word.startsWith(text));
+        log.textContent = `Prefix ${text} reaches a subtree containing: ${matches.join(', ')}.`;
+      } else if (words.has(text)) {
+        log.textContent = `${text} consumed a complete path and ended at a terminal value.`;
+      } else {
+        const knownPrefix = [...words].some((word) => word.startsWith(text[0] || ''));
+        log.textContent = knownPrefix
+          ? `${text} diverges before a terminal; exact lookup is absent.`
+          : `${text} has no root edge for ${text[0]}; exact lookup stops immediately.`;
+      }
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      if (button.dataset.action === 'reset') {
+        pathRoot.replaceChildren();
+        log.textContent = 'Select a key or prefix.';
+      } else if (button.dataset.word) render(button.dataset.word, 'word');
+      else if (button.dataset.prefix) render(button.dataset.prefix, 'prefix');
+    });
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -866,6 +913,7 @@
     document.querySelectorAll('[data-ms-heap]').forEach(initHeapLab);
     document.querySelectorAll('[data-ms-hash]').forEach(initHashLab);
     document.querySelectorAll('[data-ms-ordered]').forEach(initOrderedLab);
+    document.querySelectorAll('[data-ms-trie]').forEach(initTrieLab);
   }
 
   if (document.readyState === 'loading') {

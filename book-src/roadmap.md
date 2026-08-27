@@ -13,7 +13,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 04 | Heaps, priority, and sorting | Which minimum ordering is sufficient for the workload? | **Chapter available** |
 | 05 | Hashing under pressure | What happens to lookup tails as clusters form? | **Chapter available** |
 | 06 | Balanced search trees | Which invariants keep ordered mutation logarithmic? | **Chapter available** |
-| 07 | Tries and radix structures | When can key structure replace comparison? | Planned |
+| 07 | Tries and radix structures | When can key structure replace comparison? | **Chapter available** |
 | 08 | Graph representations | When should relationships be stored densely or sparsely? | Planned |
 | 09 | Bitsets and occupancy maps | How can word-level operations replace searches? | Planned |
 | 10 | Spatial and interval indexes | Which queries justify a specialized multidimensional index? | Planned |
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Tries and radix structures**. It will not be linked
+The next chapter should be **Graphs and disjoint sets**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive prefix-path diagram;
+- an interactive traversal diagram;
 - a blank-file build; and
 - a measurement plan.
 

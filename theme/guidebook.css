@@ -505,6 +505,39 @@
 .ms-ordered-node.visited { border-color: #d49b32; background: color-mix(in srgb, #d49b32 14%, var(--bg)); }
 .ms-ordered-node.answer { border-color: #7ac7e3; background: color-mix(in srgb, #7ac7e3 16%, var(--bg)); }
 
+.ms-trie-path {
+  display: flex;
+  min-height: 4rem;
+  gap: 1.35rem;
+  align-items: center;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-trie-node {
+  position: relative;
+  display: grid;
+  min-width: 3.1rem;
+  min-height: 3.1rem;
+  place-items: center;
+  border: 1px solid #7ac7e3;
+  border-radius: 50%;
+  background: var(--bg);
+  font: 0.78em var(--mono-font);
+}
+
+.ms-trie-node::after {
+  position: absolute;
+  left: calc(100% + 0.2rem);
+  width: 0.95rem;
+  border-block-start: 1px solid var(--icons);
+  content: "";
+}
+
+.ms-trie-node:last-child::after { display: none; }
+.ms-trie-node.terminal { border-color: #d49b32; box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 4px #d49b32; }
+.ms-trie-node.missing { border-style: dashed; border-color: #ef9a9a; color: #ef9a9a; }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }
