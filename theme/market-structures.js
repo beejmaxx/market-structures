@@ -688,6 +688,110 @@
     render('The heap is empty.');
   }
 
+  function initHashLab(root) {
+    const capacity = 8;
+    const keys = [18, 26, 34, 42, 58];
+    let slots = Array(capacity).fill(null);
+    let cursor = 0;
+    let probes = [];
+    const container = root.querySelector('[data-hash-slots]');
+    const log = root.querySelector('[data-hash-log]');
+
+    function ideal(key) {
+      return key % capacity;
+    }
+
+    function liveCount() {
+      return slots.filter((slot) => typeof slot === 'number').length;
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      const live = liveCount();
+      setStat('size', live);
+      setStat('load', (live / capacity).toFixed(2));
+      setStat('probes', probes.length);
+      setStat('tombstones', slots.filter((slot) => slot === 'tombstone').length);
+      container.replaceChildren();
+      slots.forEach((value, index) => {
+        const cell = document.createElement('div');
+        const state = typeof value === 'number' ? 'occupied' : value === 'tombstone' ? 'tombstone' : 'empty';
+        cell.className = `ms-hash-slot ${state}${probes.includes(index) ? ' probed' : ''}`;
+        const key = document.createElement('strong');
+        key.textContent = state === 'occupied' ? String(value) : state === 'tombstone' ? 'tomb' : 'empty';
+        const label = document.createElement('span');
+        label.textContent = `bucket ${index}`;
+        cell.append(key, label);
+        container.append(cell);
+      });
+      log.textContent = message;
+    }
+
+    function locate(key, forInsert = false) {
+      probes = [];
+      let firstTombstone = -1;
+      for (let distance = 0; distance < capacity; distance += 1) {
+        const index = (ideal(key) + distance) % capacity;
+        probes.push(index);
+        const slot = slots[index];
+        if (slot === key) return { found: true, index };
+        if (slot === 'tombstone' && firstTombstone < 0) firstTombstone = index;
+        if (slot === null) {
+          return { found: false, index: forInsert && firstTombstone >= 0 ? firstTombstone : index };
+        }
+      }
+      return { found: false, index: forInsert ? firstTombstone : -1 };
+    }
+
+    function find(key) {
+      const result = locate(key);
+      render(
+        result.found
+          ? `Found ${key} in bucket ${result.index} after ${probes.length} probe${probes.length === 1 ? '' : 's'}.`
+          : `${key} is absent. Lookup stopped after ${probes.length} probe${probes.length === 1 ? '' : 's'}.`,
+      );
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === 'insert') {
+        const key = keys[cursor % keys.length];
+        cursor += 1;
+        const result = locate(key, true);
+        if (result.found) render(`${key} is already present; insertion made no duplicate.`);
+        else if (result.index < 0) render(`The table is full; ${key} was rejected.`);
+        else {
+          slots[result.index] = key;
+          render(`Inserted ${key} in bucket ${result.index}; its ideal bucket is ${ideal(key)}.`);
+        }
+      }
+      if (action === 'find') find(34);
+      if (action === 'miss') find(50);
+      if (action === 'delete') {
+        const result = locate(26);
+        if (result.found) {
+          slots[result.index] = 'tombstone';
+          render(`Deleted 26 from bucket ${result.index}, leaving a tombstone so later keys remain reachable.`);
+        } else render('26 is absent. Insert it before deleting it.');
+      }
+      if (action === 'reset') {
+        slots = Array(capacity).fill(null);
+        cursor = 0;
+        probes = [];
+        render('Every slot is empty.');
+      }
+    });
+
+    render('Every slot is empty.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -695,6 +799,7 @@
     document.querySelectorAll('[data-ms-array]').forEach(initArrayLab);
     document.querySelectorAll('[data-ms-stack]').forEach(initStackLab);
     document.querySelectorAll('[data-ms-heap]').forEach(initHeapLab);
+    document.querySelectorAll('[data-ms-hash]').forEach(initHashLab);
   }
 
   if (document.readyState === 'loading') {

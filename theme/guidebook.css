@@ -456,6 +456,30 @@
   background: color-mix(in srgb, #d49b32 14%, var(--bg));
 }
 
+.ms-hash {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(3.4rem, 1fr));
+  gap: 0.35rem;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-hash-slot {
+  display: grid;
+  min-width: 3.4rem;
+  min-height: 4.4rem;
+  place-items: center;
+  border: 1px dashed var(--table-border-color);
+  background: var(--bg);
+  color: var(--icons);
+}
+
+.ms-hash-slot strong { font: 0.86em var(--mono-font); }
+.ms-hash-slot span { font: 0.6em var(--mono-font); }
+.ms-hash-slot.occupied { border-style: solid; border-color: #7ac7e3; color: var(--fg); }
+.ms-hash-slot.tombstone { border-style: solid; border-color: #ef9a9a; color: #ef9a9a; }
+.ms-hash-slot.probed { box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 40%, transparent); }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

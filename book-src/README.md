@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first six chapters are complete learning chapters:
+The first seven chapters are complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -28,6 +28,8 @@ The first six chapters are complete learning chapters:
   capacity, backpressure semantics, and object lifetime inside fixed storage.
 - **Heaps, priority queues, and sorting** develops partial order, repair paths,
   indexed updates, heapify, and batch-versus-online choices.
+- **Hashing under pressure** develops collision policies, probe invariants,
+  tombstones, load-sensitive tails, and bounded ID indexes.
 
 The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
 listed as a chapter only after it contains enough material to learn from; the
