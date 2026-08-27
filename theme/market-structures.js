@@ -1685,6 +1685,58 @@
     render('The book is empty.');
   }
 
+  function initCapstoneLab(root) {
+    const gates = [
+      ['semantics', 'versioned contract'],
+      ['correctness', 'oracle + invariants'],
+      ['workload', 'trace defense'],
+      ['measurement', 'reproducible evidence'],
+      ['defense', 'adversarial review'],
+    ];
+    const complete = new Set();
+    const container = root.querySelector('[data-capstone-gates]');
+    const log = root.querySelector('[data-capstone-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      const next = gates.find(([name]) => !complete.has(name));
+      setStat('passed', `${complete.size} / ${gates.length}`);
+      setStat('next', next ? next[0] : 'none');
+      const benchmarkReady = ['semantics', 'correctness', 'workload'].every((name) => complete.has(name));
+      setStat('ready', benchmarkReady ? 'yes' : 'no');
+      setStat('status', complete.size === gates.length ? 'defended' : complete.size ? 'in progress' : 'not started');
+      container.replaceChildren();
+      gates.forEach(([name, description]) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.gate = name;
+        button.className = `ms-capstone-gate${complete.has(name) ? ' complete' : ''}${next && next[0] === name ? ' next' : ''}`;
+        button.textContent = `${name}: ${description}`;
+        container.append(button);
+      });
+      log.textContent = message;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-gate]');
+      if (!button) return;
+      const name = button.dataset.gate;
+      if (complete.has(name)) {
+        complete.delete(name);
+        render(`Reopened the ${name} gate; downstream conclusions may need review.`);
+      } else {
+        complete.add(name);
+        render(`Marked ${name} complete. Only do this when the corresponding artifact exists.`);
+      }
+    });
+
+    render('Start by versioning the semantic contract and trace schema.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1704,6 +1756,7 @@
     document.querySelectorAll('[data-ms-publish]').forEach(initPublishLab);
     document.querySelectorAll('[data-ms-benchmark]').forEach(initBenchmarkLab);
     document.querySelectorAll('[data-ms-book]').forEach(initBookLab);
+    document.querySelectorAll('[data-ms-capstone]').forEach(initCapstoneLab);
   }
 
   if (document.readyState === 'loading') {

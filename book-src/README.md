@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first nineteen chapters are complete learning chapters:
+The first twenty chapters are complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -54,6 +54,8 @@ The first nineteen chapters are complete learning chapters:
   pooling, matching semantics, and repository study into one defended system.
 - **C++ and Rust engineering** compares ownership, layout, unsafe boundaries,
   build policy, and generated work through three honest experiment modes.
+- **Capstone and defense** turns the curriculum into a twelve-week build,
+  evidence gates, a scoring rubric, and a reproducible report.
 
 The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
 listed as a chapter only after it contains enough material to learn from; the

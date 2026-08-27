@@ -24,7 +24,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 15 | Benchmark design | Which experiment distinguishes the proposed mechanisms? | **Chapter available** |
 | 16 | Order-book representations | Which access paths deserve independent indexes? | **Chapter available** |
 | 17 | C++ and Rust implementations | How do language constraints change the best representation? | **Chapter available** |
-| 18 | Capstone and defense | Can the system survive correctness, workload, and measurement challenges? | Planned |
+| 18 | Capstone and defense | Can the system survive correctness, workload, and measurement challenges? | **Chapter available** |
 
 ## Gates
 
@@ -53,15 +53,10 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Capstone and defense**. It will not be linked
-from the chapter list until it includes:
-
-- a complete conceptual model;
-- mutation invariants;
-- C++ and Rust representation choices;
-- a capstone rubric and report template;
-- a blank-file build; and
-- a measurement plan.
+The curriculum is complete. Start with the [diagnostic](diagnostic.md), follow
+the chapter checkpoints, and use the [capstone](18-capstone-defense.md) to choose
+one falsifiable representation question. New chapters should be added only when
+they introduce a distinct workload, invariant, or machine mechanism.
 
 ## Coverage audit
 

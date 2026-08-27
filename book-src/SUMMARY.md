@@ -34,6 +34,7 @@
 - [Benchmark design](15-benchmark-design.md)
 - [Order-book representations](16-order-book-representations.md)
 - [C++ and Rust engineering](17-cpp-rust-engineering.md)
+- [Capstone and defense](18-capstone-defense.md)
 
 # Program
 
