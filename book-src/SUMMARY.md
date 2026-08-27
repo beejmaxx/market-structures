@@ -25,6 +25,7 @@
 # Machine behavior
 
 - [Memory hierarchy](11-memory-hierarchy.md)
+- [Allocation, arenas, slabs, and pools](12-allocation-pools.md)
 
 # Program
 

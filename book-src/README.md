@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first thirteen chapters are complete learning chapters:
+The first fourteen chapters are complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -42,6 +42,8 @@ The first thirteen chapters are complete learning chapters:
   overlap indexes by update pattern and query contract.
 - **Memory hierarchy** connects cache lines, TLBs, branches, dependencies,
   prefetching, and coherence to representation choices.
+- **Allocation, arenas, slabs, and pools** makes lifetime, LIFO reuse,
+  generations, bounded capacity, and failure policy explicit.
 
 The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
 listed as a chapter only after it contains enough material to learn from; the

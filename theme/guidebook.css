@@ -630,6 +630,31 @@
 .ms-cache-slot.touched { background: color-mix(in srgb, #7ac7e3 18%, var(--bg)); color: var(--fg); }
 .ms-cache-slot.current { box-shadow: inset 0 -3px #d49b32; }
 
+.ms-pool {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(3.5rem, 1fr));
+  gap: 0.4rem;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-pool-slot {
+  display: grid;
+  min-width: 3.5rem;
+  min-height: 4.5rem;
+  place-items: center;
+  border: 1px dashed var(--table-border-color);
+  background: var(--bg);
+  color: var(--icons);
+  cursor: pointer;
+}
+
+.ms-pool-slot strong { font: 0.78em var(--mono-font); }
+.ms-pool-slot span { font: 0.6em var(--mono-font); }
+.ms-pool-slot.live { border-style: solid; border-color: #7ac7e3; color: var(--fg); }
+.ms-pool-slot.selected { box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 50%, transparent); }
+.ms-pool-slot.free-top { border-color: #d49b32; }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

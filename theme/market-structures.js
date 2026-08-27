@@ -1234,6 +1234,105 @@
     render('Select an address pattern.');
   }
 
+  function initPoolLab(root) {
+    const capacity = 8;
+    let slots;
+    let freeStack;
+    let selected;
+    let nextOrder;
+    let staleHandle;
+    const container = root.querySelector('[data-pool-slots]');
+    const log = root.querySelector('[data-pool-log]');
+
+    function resetState() {
+      slots = Array.from({ length: capacity }, () => ({ live: false, generation: 0, value: null }));
+      freeStack = Array.from({ length: capacity }, (_, index) => capacity - 1 - index);
+      selected = null;
+      nextOrder = 1;
+      staleHandle = null;
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      setStat('live', slots.filter((slot) => slot.live).length);
+      setStat('free', freeStack.length);
+      setStat('top', freeStack.length ? freeStack[freeStack.length - 1] : 'none');
+      setStat('selected', selected === null ? 'none' : selected);
+      container.replaceChildren();
+      slots.forEach((slot, index) => {
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.dataset.index = String(index);
+        const isTop = freeStack[freeStack.length - 1] === index;
+        cell.className = `ms-pool-slot${slot.live ? ' live' : ''}${selected === index ? ' selected' : ''}${isTop ? ' free-top' : ''}`;
+        const value = document.createElement('strong');
+        value.textContent = slot.live ? slot.value : isTop ? 'free top' : 'free';
+        const label = document.createElement('span');
+        label.textContent = `slot ${index} · gen ${slot.generation}`;
+        cell.append(value, label);
+        container.append(cell);
+      });
+      log.textContent = message;
+    }
+
+    root.addEventListener('click', (event) => {
+      const slotButton = event.target.closest('.ms-pool-slot[data-index]');
+      if (slotButton) {
+        selected = Number(slotButton.dataset.index);
+        render(`Selected slot ${selected}.`);
+        return;
+      }
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === 'allocate') {
+        if (!freeStack.length) {
+          render('The pool is full; allocation returned Full without changing a live object.');
+        } else {
+          const index = freeStack.pop();
+          slots[index].live = true;
+          slots[index].value = `order ${nextOrder}`;
+          nextOrder += 1;
+          selected = index;
+          render(`Popped slot ${index}, constructed ${slots[index].value}, and returned handle (${index}, ${slots[index].generation}).`);
+        }
+      }
+      if (action === 'free') {
+        if (selected === null || !slots[selected].live) {
+          render('Select a live slot before freeing it.');
+        } else {
+          const slot = slots[selected];
+          staleHandle = { index: selected, generation: slot.generation };
+          const value = slot.value;
+          slot.live = false;
+          slot.value = null;
+          slot.generation += 1;
+          freeStack.push(selected);
+          render(`Destroyed ${value}, incremented generation, and pushed slot ${selected} onto the LIFO free stack.`);
+        }
+      }
+      if (action === 'stale') {
+        if (!staleHandle) render('Free a live slot to create an old handle first.');
+        else {
+          const slot = slots[staleHandle.index];
+          const valid = slot.live && slot.generation === staleHandle.generation;
+          render(`Old handle (${staleHandle.index}, ${staleHandle.generation}) is ${valid ? 'valid' : 'stale'}; current generation is ${slot.generation}.`);
+        }
+      }
+      if (action === 'reset') {
+        resetState();
+        render('All slots are free; allocation will pop slot 0.');
+      }
+    });
+
+    resetState();
+    render('All slots are free; allocation will pop slot 0.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1248,6 +1347,7 @@
     document.querySelectorAll('[data-ms-bitmap]').forEach(initBitmapLab);
     document.querySelectorAll('[data-ms-range]').forEach(initRangeLab);
     document.querySelectorAll('[data-ms-cache]').forEach(initCacheLab);
+    document.querySelectorAll('[data-ms-pool]').forEach(initPoolLab);
   }
 
   if (document.readyState === 'loading') {

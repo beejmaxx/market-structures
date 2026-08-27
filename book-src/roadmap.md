@@ -18,7 +18,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 09 | Bitsets and occupancy maps | How can word-level operations replace searches? | **Chapter available** |
 | 10 | Spatial and interval indexes | Which queries justify a specialized multidimensional index? | **Chapter available** |
 | 11 | Memory hierarchy | Which observed costs come from cache, TLB, branches, or dependencies? | **Chapter available** |
-| 12 | Allocation and object pools | How do lifetime and reuse policies affect latency distributions? | Planned |
+| 12 | Allocation and object pools | How do lifetime and reuse policies affect latency distributions? | **Chapter available** |
 | 13 | Layout and indirection | When should data be AoS, SoA, packed, indexed, or pointer-linked? | Planned |
 | 14 | Concurrency primitives | What memory-order guarantees does the algorithm actually need? | Planned |
 | 15 | Benchmark design | Which experiment distinguishes the proposed mechanisms? | Planned |
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Allocation and object pools**. It will not be linked
+The next chapter should be **Data layout and indirection**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive pool-reuse diagram;
+- an interactive layout diagram;
 - a blank-file build; and
 - a measurement plan.
 
