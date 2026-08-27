@@ -22,6 +22,10 @@
 - [Bitsets and occupancy maps](09-bitsets-occupancy.md)
 - [Range and interval structures](10-range-interval.md)
 
+# Machine behavior
+
+- [Memory hierarchy](11-memory-hierarchy.md)
+
 # Program
 
 - [Learning roadmap](roadmap.md)

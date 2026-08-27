@@ -1178,6 +1178,62 @@
     render('Select a query or point update.');
   }
 
+  function initCacheLab(root) {
+    const capacity = 32;
+    const patterns = {
+      sequential: [0, 1, 2, 3, 4, 5, 6, 7],
+      stride: [0, 5, 10, 15, 20, 25, 30, 3],
+      dependent: [0, 19, 6, 27, 12, 31, 9, 22],
+    };
+    let touched = [];
+    let dependency = 'none';
+    const container = root.querySelector('[data-cache-slots]');
+    const log = root.querySelector('[data-cache-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message) {
+      const lines = new Set(touched.map((index) => Math.floor(index / 4)));
+      setStat('loads', touched.length);
+      setStat('lines', lines.size);
+      setStat('density', lines.size ? (touched.length / lines.size).toFixed(1) : '0.0');
+      setStat('dependency', dependency);
+      container.replaceChildren();
+      for (let index = 0; index < capacity; index += 1) {
+        const slot = document.createElement('span');
+        slot.className = `ms-cache-slot${touched.includes(index) ? ' touched' : ''}${index === touched[touched.length - 1] ? ' current' : ''}`;
+        slot.textContent = String(index);
+        container.append(slot);
+      }
+      log.textContent = message;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === 'reset') {
+        touched = [];
+        dependency = 'none';
+        render('Select an address pattern.');
+        return;
+      }
+      touched = [...patterns[action]];
+      dependency = action === 'dependent' ? 'serial' : 'independent';
+      const descriptions = {
+        sequential: 'Sequential loads used all four modeled elements from each of two lines.',
+        stride: 'The stride spread eight loads across eight modeled cache lines.',
+        dependent: 'Each loaded value selects the next address, so the eight loads form one dependency chain.',
+      };
+      render(descriptions[action]);
+    });
+
+    render('Select an address pattern.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1191,6 +1247,7 @@
     document.querySelectorAll('[data-ms-graph]').forEach(initGraphLab);
     document.querySelectorAll('[data-ms-bitmap]').forEach(initBitmapLab);
     document.querySelectorAll('[data-ms-range]').forEach(initRangeLab);
+    document.querySelectorAll('[data-ms-cache]').forEach(initCacheLab);
   }
 
   if (document.readyState === 'loading') {

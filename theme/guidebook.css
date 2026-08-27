@@ -607,6 +607,29 @@
 
 .ms-range-node.touched { border-color: #d49b32; background: color-mix(in srgb, #d49b32 15%, var(--bg)); }
 
+.ms-cache-grid {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(1.9rem, 1fr));
+  gap: 0.3rem 0;
+  margin-block: 1rem;
+  overflow-x: auto;
+}
+
+.ms-cache-slot {
+  display: grid;
+  min-height: 2.5rem;
+  place-items: center;
+  border-block: 1px solid var(--table-border-color);
+  background: var(--bg);
+  color: var(--icons);
+  font: 0.62em var(--mono-font);
+}
+
+.ms-cache-slot:nth-child(4n + 1) { border-inline-start: 2px solid var(--table-border-color); }
+.ms-cache-slot:nth-child(4n) { border-inline-end: 2px solid var(--table-border-color); }
+.ms-cache-slot.touched { background: color-mix(in srgb, #7ac7e3 18%, var(--bg)); color: var(--fg); }
+.ms-cache-slot.current { box-shadow: inset 0 -3px #d49b32; }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }
