@@ -856,8 +856,15 @@
   .chapter-meta span { border-inline-end: 0 !important; }
   .ms-layout,
   .ms-lab-head,
-  .ms-stack-meanings { grid-template-columns: 1fr; }
+  .ms-stack-meanings,
+  .ms-layout-compare,
+  .ms-book,
+  .ms-ordered-row,
+  .ms-range-row { grid-template-columns: 1fr; }
   .ms-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ms-bitmap,
+  .ms-cache-grid { grid-template-columns: repeat(8, minmax(1.8rem, 1fr)); }
+  .ms-graph { grid-template-columns: repeat(3, minmax(3rem, 1fr)); }
   .ms-policy { width: 100%; margin-inline-start: 0; }
 }
 

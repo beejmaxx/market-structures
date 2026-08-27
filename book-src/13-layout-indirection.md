@@ -271,3 +271,5 @@ Explain:
 - what `repr(C)` does and does not guarantee;
 - how intrusive links couple an object to access paths; and
 - why semantic parity and layout parity answer different questions.
+
+Next: [Concurrency and atomics](14-concurrency-atomics.md).

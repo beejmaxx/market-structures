@@ -334,3 +334,5 @@ Explain:
 - when dense levels plus occupancy beat an ordered price tree;
 - why repository benchmark numbers are not comparable by default; and
 - which invariant each fill, cancel, and price-level deletion must repair.
+
+Next: [C++ and Rust engineering](17-cpp-rust-engineering.md).

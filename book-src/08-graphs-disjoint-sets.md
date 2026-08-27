@@ -224,3 +224,5 @@ Explain:
 - when a visited mark must be written;
 - what DSU cannot answer despite fast connectivity; and
 - which costs `O(V+E)` hides on real hardware.
+
+Next: [Bitsets and occupancy maps](09-bitsets-occupancy.md).

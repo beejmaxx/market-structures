@@ -1,9 +1,9 @@
 # Learning roadmap
 
-<p class="chapter-subtitle">The program is eighteen modules. Only finished learning material appears as a chapter in the sidebar.</p>
+<p class="chapter-subtitle">Eighteen modules connect core structures to one evidence-driven market-system capstone.</p>
 
-The earlier prototype displayed every module as though the lesson already
-existed. This roadmap separates the curriculum plan from completed chapters.
+Every module now has complete learning material. Modules 01 and 03 use two
+chapters so arrays/vectors and stack/queue contracts remain distinct.
 
 | Module | Topic | Core question | Status |
 |---:|---|---|---|
@@ -12,11 +12,11 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 03 | Stacks, queues, deques, and rings | How should LIFO/FIFO order, full, empty, wraparound, and backpressure be represented? | **Two chapters available** |
 | 04 | Heaps, priority, and sorting | Which minimum ordering is sufficient for the workload? | **Chapter available** |
 | 05 | Hashing under pressure | What happens to lookup tails as clusters form? | **Chapter available** |
-| 06 | Balanced search trees | Which invariants keep ordered mutation logarithmic? | **Chapter available** |
+| 06 | Ordered indexes | Which invariants and layouts support ordered navigation? | **Chapter available** |
 | 07 | Tries and radix structures | When can key structure replace comparison? | **Chapter available** |
 | 08 | Graph representations | When should relationships be stored densely or sparsely? | **Chapter available** |
 | 09 | Bitsets and occupancy maps | How can word-level operations replace searches? | **Chapter available** |
-| 10 | Spatial and interval indexes | Which queries justify a specialized multidimensional index? | **Chapter available** |
+| 10 | Range and interval indexes | Which aggregates and overlap queries justify an auxiliary index? | **Chapter available** |
 | 11 | Memory hierarchy | Which observed costs come from cache, TLB, branches, or dependencies? | **Chapter available** |
 | 12 | Allocation and object pools | How do lifetime and reuse policies affect latency distributions? | **Chapter available** |
 | 13 | Layout and indirection | When should data be AoS, SoA, packed, indexed, or pointer-linked? | **Chapter available** |
@@ -63,17 +63,19 @@ they introduce a distinct workload, invariant, or machine mechanism.
 Each relevant chapter must name and distinguish the standard-library baseline,
 the custom learning implementation, and the low-latency specialization.
 
-| Concept | C++ baseline | Rust baseline | Planned specialization |
+| Concept | C++ baseline | Rust baseline | Low-latency specialization |
 |---|---|---|---|
 | fixed array/view | built-in array, `std::array`, `std::span` | `[T; N]`, slices | dense grids, AoS/SoA |
 | growable array | `std::vector` | `Vec` | static/small vector |
+| linked sequence | `std::forward_list`, `std::list` | `LinkedList` | intrusive pooled list |
 | stack | `std::stack`, vector-backed stack | `Vec` as stack | fixed-capacity stack |
 | deque/ring | `std::deque` | `VecDeque` | bounded ring |
 | priority queue | `std::priority_queue` | `BinaryHeap` | indexed heap |
 | hash map/set | `std::unordered_map/set` | `HashMap/HashSet` | fixed open addressing |
 | ordered map/set | `std::map/set` | `BTreeMap/BTreeSet` | flat map, radix, skip list |
-
-Additional structures will appear where their workloads justify them: Bloom
-filters under hashing; Fenwick and segment trees under range aggregation;
-disjoint sets under graph algorithms; and arenas, slabs, and generational pools
-under allocation.
+| prefix/radix lookup | ordered/hash maps | ordered/hash maps | arena radix/trie |
+| graph traversal | vectors, deque | `Vec`, `VecDeque` | CSR + bounded worklist |
+| packed membership | `std::bitset`, word arrays | word arrays | hierarchical occupancy |
+| range aggregate | vector + direct scan | `Vec` + direct scan | Fenwick/segment tree |
+| allocation policy | allocator, `std::pmr` | reserved `Vec`, typed slots | arena/slab/generational pool |
+| concurrent handoff | mutex, `std::atomic` | mutex, standard atomics | bounded ownership-specific SPSC |

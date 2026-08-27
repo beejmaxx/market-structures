@@ -300,3 +300,5 @@ Explain:
 - how coordinated omission hides stalls; and
 - the different questions answered by layout-equivalent, standard, and best-
   defended C++/Rust comparisons.
+
+Next: [Order-book representations](16-order-book-representations.md).

@@ -210,3 +210,5 @@ Explain without notes:
 - how a bitmap can index packed children; and
 - why an arena is useful in both C++ and Rust even for different language
   reasons.
+
+Next: [Graphs and disjoint sets](08-graphs-disjoint-sets.md).

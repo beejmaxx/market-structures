@@ -227,3 +227,5 @@ Explain:
 - why footprint affects both caches and TLBs;
 - when branchless code can be worse; and
 - which experiment would distinguish cache density from fewer comparisons.
+
+Next: [Allocation, arenas, slabs, and pools](12-allocation-pools.md).

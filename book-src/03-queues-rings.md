@@ -383,4 +383,4 @@ You own this chapter when you can answer:
 6. What new proof obligations appear when producer and consumer become
    different threads?
 
-Next planned module: **Heaps, priority, and sorting**.
+Next: [Heaps, priority queues, and sorting](04-heaps-sorting.md).

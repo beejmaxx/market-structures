@@ -233,3 +233,5 @@ Explain:
 - which algebra a segment tree requires;
 - how `max_end` prunes an interval search; and
 - why occupancy, FIFO, ID lookup, and range volume deserve separate indexes.
+
+Next: [Memory hierarchy](11-memory-hierarchy.md).

@@ -264,3 +264,5 @@ Explain:
 - what a generation handle detects and cannot detect;
 - how an arena differs from an individually reusable pool; and
 - what the system does when fixed capacity is exhausted.
+
+Next: [Data layout and indirection](13-layout-indirection.md).

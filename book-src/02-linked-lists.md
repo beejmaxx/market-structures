@@ -66,6 +66,31 @@ It does not provide random access, it owns its node storage, and ordinary
 insertion can involve the allocator. That makes it a useful semantic reference
 for list operations, not an automatic choice for a preallocated hot path.
 
+### C++ `std::forward_list<T>`
+
+[`std::forward_list`](https://eel.is/c++draft/forward.list) is the standard
+singly linked sequence. It stores only a forward link per node and deliberately
+expresses mutations relative to a predecessor:
+
+```cpp
+std::forward_list<Order> orders;
+orders.push_front(order_a);
+
+auto before = orders.before_begin();
+orders.insert_after(before, order_b);
+orders.erase_after(before);
+```
+
+`before_begin()` supplies a position before the first element so insertion and
+erasure at the head use the same “after predecessor” API. A singly linked node
+cannot unlink itself from the middle because it does not know which link points
+to it. The container also does not provide a constant-time `size()` member;
+maintaining a count would enlarge the state and mutation contract.
+
+Use `forward_list` as the baseline when forward traversal and predecessor-based
+mutation really match the workload. Using it merely to save one pointer can
+backfire if cancellation first has to search for the predecessor.
+
 ### Rust `LinkedList<T>`
 
 Rust provides
@@ -88,7 +113,7 @@ usually a better default because array-based containers are generally faster
 and more memory efficient. `LinkedList` remains relevant when its linked
 representation and end operations match the workload.
 
-Neither standard container is intrusive, and neither is the fixed order-pool
+None of these standard containers is intrusive, and none is the fixed order-pool
 design built later in this chapter. Keep these three questions separate:
 
 1. Is list ordering the correct abstract behavior?
@@ -296,4 +321,5 @@ You own this chapter when you can answer:
    an undesirable way?
 5. Which access paths in an order book need their own indexes?
 
-Continue with the [learning roadmap](roadmap.md).
+Continue with [Stacks](03-stacks.md), where a narrower access contract removes
+the need for arbitrary traversal entirely.

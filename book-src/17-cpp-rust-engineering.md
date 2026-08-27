@@ -349,3 +349,5 @@ Explain:
 - the evidence required before using unchecked/unsafe access; and
 - how to trace a performance difference from measurement back to a language
   constraint without confusing correlation for cause.
+
+Next: [Capstone and defense](18-capstone-defense.md).

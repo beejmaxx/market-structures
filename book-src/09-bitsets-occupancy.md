@@ -230,3 +230,5 @@ Explain:
 - why a bitmap handles price navigation but not FIFO or cancellation;
 - how packing can create atomic contention; and
 - when domain size makes an ordered sparse structure preferable.
+
+Next: [Range and interval structures](10-range-interval.md).

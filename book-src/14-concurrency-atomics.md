@@ -266,3 +266,5 @@ Explain:
 - why lock-free does not mean low-tail-latency;
 - how false sharing occurs between separate atomic counters; and
 - why fixed pooling does not by itself solve ABA or reclamation.
+
+Next: [Benchmark design](15-benchmark-design.md).

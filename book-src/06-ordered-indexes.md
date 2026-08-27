@@ -245,3 +245,5 @@ Before continuing, explain:
 - why a B-tree can outperform a binary tree without fewer comparisons;
 - when a sorted vector is the strongest baseline; and
 - why a price-level index still needs FIFO queues and an order-ID map.
+
+Next: [Tries and radix structures](07-tries-radix.md).

@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first twenty chapters are complete learning chapters:
+The book contains twenty complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -57,9 +57,8 @@ The first twenty chapters are complete learning chapters:
 - **Capstone and defense** turns the curriculum into a twelve-week build,
   evidence gates, a scoring rubric, and a reproducible report.
 
-The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
-listed as a chapter only after it contains enough material to learn from; the
-roadmap is deliberately not presented as finished instruction.
+The [learning roadmap](roadmap.md) maps these chapters onto eighteen modules,
+four practical gates, and the final capstone.
 
 ## The standard of evidence
 

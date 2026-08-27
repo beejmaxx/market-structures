@@ -222,4 +222,4 @@ work from element size and memory effects.
    contract?
 5. When does sorting the whole batch beat maintaining an online heap?
 
-Next: **Hashing under pressure**.
+Next: [Hashing under pressure](05-hashing.md).

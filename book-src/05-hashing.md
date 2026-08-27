@@ -267,3 +267,5 @@ Before continuing, explain without notes:
 
 If those answers are precise, you understand the table's invariants rather than
 only its API.
+
+Next: [Ordered indexes](06-ordered-indexes.md).

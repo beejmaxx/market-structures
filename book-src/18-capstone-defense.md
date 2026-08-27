@@ -384,3 +384,6 @@ You are ready to defend the capstone when you can:
 
 That is the knowledge gap worth closing. Memorized container complexity is only
 the beginning.
+
+Return to the [learning roadmap](roadmap.md) to choose the first gate and record
+your current mastery scores.
