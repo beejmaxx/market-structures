@@ -16,7 +16,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 07 | Tries and radix structures | When can key structure replace comparison? | **Chapter available** |
 | 08 | Graph representations | When should relationships be stored densely or sparsely? | **Chapter available** |
 | 09 | Bitsets and occupancy maps | How can word-level operations replace searches? | **Chapter available** |
-| 10 | Spatial and interval indexes | Which queries justify a specialized multidimensional index? | Planned |
+| 10 | Spatial and interval indexes | Which queries justify a specialized multidimensional index? | **Chapter available** |
 | 11 | Memory hierarchy | Which observed costs come from cache, TLB, branches, or dependencies? | Planned |
 | 12 | Allocation and object pools | How do lifetime and reuse policies affect latency distributions? | Planned |
 | 13 | Layout and indirection | When should data be AoS, SoA, packed, indexed, or pointer-linked? | Planned |
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Range and interval structures**. It will not be linked
+The next chapter should be **Memory hierarchy**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive range-query diagram;
+- an interactive cache-line diagram;
 - a blank-file build; and
 - a measurement plan.
 

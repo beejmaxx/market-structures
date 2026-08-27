@@ -1085,6 +1085,99 @@
     render('No levels are occupied.');
   }
 
+  function initRangeLab(root) {
+    const initial = [2, 1, 3, 0, 4, 2, 1, 5];
+    let values = [...initial];
+    let tree = [];
+    let touched = [];
+    let operation = 'none';
+    let answer = 'none';
+    const valuesRoot = root.querySelector('[data-range-values]');
+    const treeRoot = root.querySelector('[data-range-tree]');
+    const log = root.querySelector('[data-range-log]');
+
+    function rebuild() {
+      tree = Array(values.length + 1).fill(0);
+      values.forEach((value, zeroIndex) => {
+        for (let index = zeroIndex + 1; index <= values.length; index += index & -index) tree[index] += value;
+      });
+    }
+
+    function prefix(end, record = true) {
+      let sum = 0;
+      for (let index = end; index > 0; index -= index & -index) {
+        sum += tree[index];
+        if (record) touched.push(index);
+      }
+      return sum;
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function renderSlots(container, data, oneBased) {
+      container.replaceChildren();
+      data.forEach((value, index) => {
+        const logicalIndex = oneBased ? index + 1 : index;
+        const node = document.createElement('span');
+        node.className = `ms-range-node${oneBased && touched.includes(logicalIndex) ? ' touched' : ''}`;
+        node.textContent = `${logicalIndex}:${value}`;
+        container.append(node);
+      });
+    }
+
+    function render(message) {
+      setStat('operation', operation);
+      setStat('answer', answer);
+      setStat('touched', touched.length);
+      setStat('total', values.reduce((sum, value) => sum + value, 0));
+      renderSlots(valuesRoot, values, false);
+      renderSlots(treeRoot, tree.slice(1), true);
+      log.textContent = message;
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      touched = [];
+      answer = 'none';
+      if (action === 'prefix') {
+        operation = 'prefix';
+        answer = prefix(5);
+        render(`prefix(5) followed tree indices ${touched.join(' -> ')}.`);
+      }
+      if (action === 'range') {
+        operation = 'range';
+        const right = prefix(7);
+        const left = prefix(2);
+        answer = right - left;
+        render(`range [2, 7) subtracts two prefix paths; touched ${touched.join(', ')}.`);
+      }
+      if (action === 'update') {
+        operation = 'update';
+        values[3] += 4;
+        for (let index = 4; index <= values.length; index += index & -index) {
+          tree[index] += 4;
+          touched.push(index);
+        }
+        answer = values[3];
+        render(`Added 4 at value index 3; propagated through tree indices ${touched.join(' -> ')}.`);
+      }
+      if (action === 'reset') {
+        values = [...initial];
+        rebuild();
+        operation = 'none';
+        render('Select a query or point update.');
+      }
+    });
+
+    rebuild();
+    render('Select a query or point update.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1097,6 +1190,7 @@
     document.querySelectorAll('[data-ms-trie]').forEach(initTrieLab);
     document.querySelectorAll('[data-ms-graph]').forEach(initGraphLab);
     document.querySelectorAll('[data-ms-bitmap]').forEach(initBitmapLab);
+    document.querySelectorAll('[data-ms-range]').forEach(initRangeLab);
   }
 
   if (document.readyState === 'loading') {
