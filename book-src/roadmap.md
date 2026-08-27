@@ -23,7 +23,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 14 | Concurrency primitives | What memory-order guarantees does the algorithm actually need? | **Chapter available** |
 | 15 | Benchmark design | Which experiment distinguishes the proposed mechanisms? | **Chapter available** |
 | 16 | Order-book representations | Which access paths deserve independent indexes? | **Chapter available** |
-| 17 | C++ and Rust implementations | How do language constraints change the best representation? | Planned |
+| 17 | C++ and Rust implementations | How do language constraints change the best representation? | **Chapter available** |
 | 18 | Capstone and defense | Can the system survive correctness, workload, and measurement challenges? | Planned |
 
 ## Gates
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **C++ and Rust engineering**. It will not be linked
+The next chapter should be **Capstone and defense**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- a language-boundary decision matrix;
+- a capstone rubric and report template;
 - a blank-file build; and
 - a measurement plan.
 
