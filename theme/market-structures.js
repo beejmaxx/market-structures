@@ -904,6 +904,107 @@
     });
   }
 
+  function initGraphLab(root) {
+    const names = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const adjacency = [[1, 2], [0, 3], [0, 3, 4], [1, 2, 5], [2, 5], [3, 4]];
+    const unionEdges = [[0, 1], [0, 2], [1, 3], [2, 4], [3, 5]];
+    let parent = names.map((_, index) => index);
+    let sizes = names.map(() => 1);
+    let unionCursor = 0;
+    let visitOrder = [];
+    let edgesExamined = 0;
+    const container = root.querySelector('[data-graph-nodes]');
+    const log = root.querySelector('[data-graph-log]');
+
+    function find(vertex) {
+      while (parent[vertex] !== vertex) {
+        parent[vertex] = parent[parent[vertex]];
+        vertex = parent[vertex];
+      }
+      return vertex;
+    }
+
+    function components() {
+      return new Set(names.map((_, index) => find(index))).size;
+    }
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function render(message, algorithm = 'none') {
+      setStat('algorithm', algorithm);
+      setStat('visited', visitOrder.length);
+      setStat('components', components());
+      setStat('edges', edgesExamined);
+      const roots = [...new Set(names.map((_, index) => find(index)))];
+      container.replaceChildren();
+      names.forEach((name, index) => {
+        const node = document.createElement('span');
+        const component = roots.indexOf(find(index));
+        node.className = `ms-graph-node component-${component}${visitOrder.includes(index) ? ' visited' : ''}`;
+        const order = visitOrder.indexOf(index);
+        node.textContent = order >= 0 ? `${name} · ${order + 1}` : name;
+        container.append(node);
+      });
+      log.textContent = message;
+    }
+
+    function traverse(mode) {
+      const seen = Array(names.length).fill(false);
+      const worklist = [0];
+      seen[0] = true;
+      visitOrder = [];
+      edgesExamined = 0;
+      while (worklist.length) {
+        const vertex = mode === 'BFS' ? worklist.shift() : worklist.pop();
+        visitOrder.push(vertex);
+        const neighbors = mode === 'DFS' ? [...adjacency[vertex]].reverse() : adjacency[vertex];
+        neighbors.forEach((next) => {
+          edgesExamined += 1;
+          if (!seen[next]) {
+            seen[next] = true;
+            worklist.push(next);
+          }
+        });
+      }
+      render(`${mode} visit order: ${visitOrder.map((index) => names[index]).join(' -> ')}.`, mode);
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === 'bfs') traverse('BFS');
+      if (action === 'dfs') traverse('DFS');
+      if (action === 'union') {
+        const [left, right] = unionEdges[unionCursor % unionEdges.length];
+        unionCursor += 1;
+        let leftRoot = find(left);
+        let rightRoot = find(right);
+        if (leftRoot !== rightRoot) {
+          if (sizes[leftRoot] < sizes[rightRoot]) [leftRoot, rightRoot] = [rightRoot, leftRoot];
+          parent[rightRoot] = leftRoot;
+          sizes[leftRoot] += sizes[rightRoot];
+        }
+        visitOrder = [];
+        edgesExamined = 0;
+        render(`union(${names[left]}, ${names[right]}) merged their components.`, 'DSU');
+      }
+      if (action === 'reset') {
+        parent = names.map((_, index) => index);
+        sizes = names.map(() => 1);
+        unionCursor = 0;
+        visitOrder = [];
+        edgesExamined = 0;
+        render('Edges: A-B, A-C, B-D, C-D, C-E, D-F, E-F.');
+      }
+    });
+
+    render('Edges: A-B, A-C, B-D, C-D, C-E, D-F, E-F.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -914,6 +1015,7 @@
     document.querySelectorAll('[data-ms-hash]').forEach(initHashLab);
     document.querySelectorAll('[data-ms-ordered]').forEach(initOrderedLab);
     document.querySelectorAll('[data-ms-trie]').forEach(initTrieLab);
+    document.querySelectorAll('[data-ms-graph]').forEach(initGraphLab);
   }
 
   if (document.readyState === 'loading') {

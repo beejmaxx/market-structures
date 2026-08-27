@@ -538,6 +538,31 @@
 .ms-trie-node.terminal { border-color: #d49b32; box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 4px #d49b32; }
 .ms-trie-node.missing { border-style: dashed; border-color: #ef9a9a; color: #ef9a9a; }
 
+.ms-graph {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(3rem, 1fr));
+  gap: 0.55rem;
+  margin-block: 1rem;
+}
+
+.ms-graph-node {
+  display: grid;
+  min-height: 3.5rem;
+  place-items: center;
+  border: 1px solid var(--table-border-color);
+  border-radius: 50%;
+  background: var(--bg);
+  font: 0.86em var(--mono-font);
+}
+
+.ms-graph-node.visited { border-color: #d49b32; background: color-mix(in srgb, #d49b32 14%, var(--bg)); }
+.ms-graph-node.component-0 { box-shadow: inset 0 -4px #7ac7e3; }
+.ms-graph-node.component-1 { box-shadow: inset 0 -4px #8fe895; }
+.ms-graph-node.component-2 { box-shadow: inset 0 -4px #ef9a9a; }
+.ms-graph-node.component-3 { box-shadow: inset 0 -4px #d49b32; }
+.ms-graph-node.component-4 { box-shadow: inset 0 -4px #bda5e8; }
+.ms-graph-node.component-5 { box-shadow: inset 0 -4px #d7cd80; }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

@@ -14,7 +14,7 @@ low-latency market systems. Each finished chapter explains the structure,
 builds it from first principles, attacks its invariants, and measures the
 machine behavior that asymptotic notation leaves out.
 
-The first nine chapters are complete learning chapters:
+The first ten chapters are complete learning chapters:
 
 - **Arrays and memory layout** develops fixed extent, slices and spans, stride,
   multidimensional layout, and AoS versus SoA.
@@ -34,6 +34,8 @@ The first nine chapters are complete learning chapters:
   navigation, and the price-level access path.
 - **Tries and radix structures** uses key digits, prefix sharing, compression,
   and compact child layouts for string and integer indexes.
+- **Graphs and disjoint sets** develops packed adjacency, traversal worklists,
+  reachability, shortest paths, and amortized connectivity.
 
 The [learning roadmap](roadmap.md) shows where the book goes next. A topic is
 listed as a chapter only after it contains enough material to learn from; the

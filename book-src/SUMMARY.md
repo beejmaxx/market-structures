@@ -18,6 +18,7 @@
 - [Hashing under pressure](05-hashing.md)
 - [Ordered indexes](06-ordered-indexes.md)
 - [Tries and radix structures](07-tries-radix.md)
+- [Graphs and disjoint sets](08-graphs-disjoint-sets.md)
 
 # Program
 
