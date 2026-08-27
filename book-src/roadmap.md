@@ -15,7 +15,7 @@ existed. This roadmap separates the curriculum plan from completed chapters.
 | 06 | Balanced search trees | Which invariants keep ordered mutation logarithmic? | **Chapter available** |
 | 07 | Tries and radix structures | When can key structure replace comparison? | **Chapter available** |
 | 08 | Graph representations | When should relationships be stored densely or sparsely? | **Chapter available** |
-| 09 | Bitsets and occupancy maps | How can word-level operations replace searches? | Planned |
+| 09 | Bitsets and occupancy maps | How can word-level operations replace searches? | **Chapter available** |
 | 10 | Spatial and interval indexes | Which queries justify a specialized multidimensional index? | Planned |
 | 11 | Memory hierarchy | Which observed costs come from cache, TLB, branches, or dependencies? | Planned |
 | 12 | Allocation and object pools | How do lifetime and reuse policies affect latency distributions? | Planned |
@@ -53,13 +53,13 @@ latency, memory use, correctness evidence, and threats to validity.
 
 ## What comes next
 
-The next chapter should be **Bitsets and occupancy maps**. It will not be linked
+The next chapter should be **Range and interval structures**. It will not be linked
 from the chapter list until it includes:
 
 - a complete conceptual model;
 - mutation invariants;
 - C++ and Rust representation choices;
-- an interactive bit-scan diagram;
+- an interactive range-query diagram;
 - a blank-file build; and
 - a measurement plan.
 

@@ -563,6 +563,27 @@
 .ms-graph-node.component-4 { box-shadow: inset 0 -4px #bda5e8; }
 .ms-graph-node.component-5 { box-shadow: inset 0 -4px #d7cd80; }
 
+.ms-bitmap {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(1.8rem, 1fr));
+  gap: 0.25rem;
+  margin-block: 1rem;
+}
+
+.ms-bit {
+  display: grid;
+  min-height: 2.4rem;
+  place-items: center;
+  border: 1px dashed var(--table-border-color);
+  background: var(--bg);
+  color: var(--icons);
+  font: 0.62em var(--mono-font);
+}
+
+.ms-bit.set { border-style: solid; border-color: #7ac7e3; background: color-mix(in srgb, #7ac7e3 15%, var(--bg)); color: var(--fg); }
+.ms-bit.cursor { box-shadow: 0 0 0 2px color-mix(in srgb, #d49b32 45%, transparent); }
+.ms-bit.result { border-color: #d49b32; background: color-mix(in srgb, #d49b32 18%, var(--bg)); }
+
 @keyframes ms-pulse {
   0% { transform: scale(0.88); background: color-mix(in srgb, #d49b32 30%, var(--bg)); }
   100% { transform: scale(1); }

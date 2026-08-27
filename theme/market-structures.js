@@ -1005,6 +1005,86 @@
     render('Edges: A-B, A-C, B-D, C-D, C-E, D-F, E-F.');
   }
 
+  function initBitmapLab(root) {
+    const capacity = 32;
+    const sequence = [5, 12, 20, 7, 28, 13];
+    const occupied = new Set();
+    let sequenceCursor = 0;
+    let cursor = 0;
+    let result = null;
+    const container = root.querySelector('[data-bitmap-bits]');
+    const log = root.querySelector('[data-bitmap-log]');
+
+    function setStat(name, value) {
+      const element = root.querySelector(`[data-stat="${name}"]`);
+      if (element) element.textContent = String(value);
+    }
+
+    function wordValue() {
+      let word = 0;
+      occupied.forEach((bit) => { word |= (1 << bit) >>> 0; });
+      return word >>> 0;
+    }
+
+    function render(message) {
+      setStat('cursor', cursor);
+      setStat('occupied', occupied.size);
+      setStat('word', `0x${wordValue().toString(16).padStart(8, '0')}`);
+      setStat('result', result ?? 'none');
+      container.replaceChildren();
+      for (let bit = 0; bit < capacity; bit += 1) {
+        const cell = document.createElement('span');
+        cell.className = `ms-bit${occupied.has(bit) ? ' set' : ''}${bit === cursor ? ' cursor' : ''}${bit === result ? ' result' : ''}`;
+        cell.textContent = String(bit);
+        container.append(cell);
+      }
+      log.textContent = message;
+    }
+
+    function scan(direction) {
+      result = null;
+      if (direction > 0) {
+        for (let bit = cursor + 1; bit < capacity; bit += 1) {
+          if (occupied.has(bit)) { result = bit; break; }
+        }
+      } else {
+        for (let bit = cursor - 1; bit >= 0; bit -= 1) {
+          if (occupied.has(bit)) { result = bit; break; }
+        }
+      }
+      if (result !== null) cursor = result;
+      render(result === null ? 'No occupied level exists in that direction.' : `The bit scan found occupied tick ${result}.`);
+    }
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.dataset.action;
+      result = null;
+      if (action === 'set') {
+        const bit = sequence[sequenceCursor % sequence.length];
+        sequenceCursor += 1;
+        occupied.add(bit);
+        cursor = bit;
+        render(`Set tick ${bit}; the word changed with one OR mask.`);
+      }
+      if (action === 'clear') {
+        const removed = occupied.delete(cursor);
+        render(removed ? `Cleared tick ${cursor} with one AND mask.` : `Tick ${cursor} was already clear.`);
+      }
+      if (action === 'next') scan(1);
+      if (action === 'previous') scan(-1);
+      if (action === 'reset') {
+        occupied.clear();
+        sequenceCursor = 0;
+        cursor = 0;
+        render('No levels are occupied.');
+      }
+    });
+
+    render('No levels are occupied.');
+  }
+
   function initialize() {
     document.querySelectorAll('[data-ms-vector]').forEach(initVectorLab);
     document.querySelectorAll('[data-ms-list]').forEach(initListLab);
@@ -1016,6 +1096,7 @@
     document.querySelectorAll('[data-ms-ordered]').forEach(initOrderedLab);
     document.querySelectorAll('[data-ms-trie]').forEach(initTrieLab);
     document.querySelectorAll('[data-ms-graph]').forEach(initGraphLab);
+    document.querySelectorAll('[data-ms-bitmap]').forEach(initBitmapLab);
   }
 
   if (document.readyState === 'loading') {
